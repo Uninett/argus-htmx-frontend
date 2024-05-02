@@ -2,14 +2,27 @@
 
 {% block head %}
 <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="/static/color-schemes/{{ theme|default:'light' }}.css" />
+<link rel="stylesheet" href="/static/color-schemes/light.css" media="(prefers-color-scheme: light)" />
+<link rel="stylesheet" href="/static/color-schemes/dark.css" media="(prefers-color-scheme: dark)" />
 <style>
-section { border: 1px solid blue; }
+* {
+  background-color: var(--main-bg-color);
+  color: var(--main-fg-color);
+}
+
 header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  font-weight: bold; 
+  background-color: var(--nav-bg-color);
+  color: var(--nav-fg-color);
 }
-header > * { background-color: lightgrey }
+
+a { color: var(--main-link-color); }
+
+section { border: 1px solid blue; }
 </style>
 {% endblock head %}
 

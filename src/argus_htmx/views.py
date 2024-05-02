@@ -44,6 +44,7 @@ def incident_detail(request, pk: int):
     }
     return render(request, "htmx/incidents/incident_detail.html", context=context)
 
+
 def incident_add_ack(request, pk: int, group: Optional[str] = None):
     incident = get_object_or_404(Incident, id=pk)
     is_group_member = None
@@ -69,6 +70,7 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
             )
     return render(request, "htmx/incidents/incident_add_ack.html", context=context)
 
+
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
@@ -87,7 +89,7 @@ def incidents_table(request: HtmxHttpRequest) -> HttpResponse:
     # requests, allowing us to skip rendering the unchanging parts of the
     # template.
     if request.htmx:
-        base_template = "htmx/incidents/_partial.html"
+        base_template = "htmx/incidents/_table.html"
     else:
         base_template = "htmx/incidents/_base.html"
 
@@ -101,7 +103,7 @@ def incidents_table(request: HtmxHttpRequest) -> HttpResponse:
 
     return render(
         request,
-        "htmx/incidents/table.html",
+        "htmx/incidents/incidents.html",
         context=context
     )
 

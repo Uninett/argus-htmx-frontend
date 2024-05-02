@@ -99,8 +99,6 @@ def incidents_table(request: HtmxHttpRequest) -> HttpResponse:
         "page": page,
     }
 
-    # return render(request, "htmx/incidents/list.html", context=context)
-
     return render(
         request,
         "htmx/incidents/table.html",

@@ -1,7 +1,11 @@
 <tr
         id="incident-{{ incident.pk }}-row"
 >
-    <td> X</td>
+    <td>
+        {% block bulk_operations %}
+            <p>X</p>
+        {% endblock bulk_operations %}
+    </td>
     <td>
         {% block incident_pk %}
             {% include "htmx/incidents/_incident_pk.html" %}

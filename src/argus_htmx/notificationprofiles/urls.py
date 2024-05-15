@@ -17,5 +17,5 @@ def placeholder(request):
 
 app_name = "htmx"
 urlpatterns = [
-    path("", placeholder, name="htmx-notificationprofile-placeholder"),
+    path("", placeholder, name="notificationprofile-placeholder"),
 ]

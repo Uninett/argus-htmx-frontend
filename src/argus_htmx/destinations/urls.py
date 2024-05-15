@@ -17,5 +17,5 @@ def placeholder(request):
 
 app_name = "htmx"
 urlpatterns = [
-    path("", placeholder, name="htmx-destination-placeholder"),
+    path("", placeholder, name="destination-placeholder"),
 ]

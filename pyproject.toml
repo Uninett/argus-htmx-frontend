@@ -17,7 +17,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "argus-server",
+    "argus-server>=1.19.1",
     "django-htmx",
     # The next is for python_version < 3.12 but we simplify code by always needing it
     "importlib_resources>=5.12",

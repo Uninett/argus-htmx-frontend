@@ -1,0 +1,11 @@
+{% extends "htmx/base.html" %}
+
+{% block main %}
+{% for timeslot in object_list %}
+{% block timeslot %}
+{% include "htmx/argus_notificationprofile/_timeslot_detail.html" %}
+{% endblock timeslot %}
+{% empty %}
+<p>None found</p>
+{% endfor %}
+{% endblock main %}

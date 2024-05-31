@@ -1,11 +1,55 @@
 {% extends "htmx/base.html" %}
+{% load partials %}
+
+{% block head %}
+{{ block.super }}
+<style>
+form {
+border: 1px solid black;
+padding: 1rem;
+}
+fieldset { padding: 1rem; display: flex; flex-direction: column; border: 1px solid black }
+</style>
+{% endblock head %}
+
+
+{% partialdef timeslot-form %}
+{% csrf_token %}
+{{ timeslot_form.as_div }}
+{% partial timerecurrence-form %}
+{% endpartialdef %}
+
+{% partialdef timerecurrence-form %}
+<fieldset>
+{{ timerecurrence_formset.as_div }}
+</fieldset>
+{% endpartialdef %}
 
 {% block main %}
-{% for timeslot in object_list %}
-{% block timeslot %}
-{% include "htmx/argus_notificationprofile/_timeslot_detail.html" %}
-{% endblock timeslot %}
+<section>
+<h1>Create new timeslot</h1>
+{% with timeslot_form=create.timeslot_form timerecurrence_form=create.timerecurrence_form timerecurrence_formset=create.timerecurrence_formset %}
+<form action="{% url 'htmx:timeslot-create' %}" method="post">
+<input type="submit" value="Create" />
+{% partial timeslot-form %}
+</form>
+{% endwith %}
+</section>
+
+<section>
+<h1>Existing timeslots</h1>
+{% for timeslot in timeslots %}
+<section>
+<h2>{{ timeslot.name.value }}</h2>
+{% with timeslot_form=timeslot.timeslot_form timerecurrence_form=timeslot.timerecurrence_form timerecurrence_formset=timeslot.timerecurrence_formset %}
+<form action="{% url 'htmx:timeslot-create' %}" method="post">
+<input type="submit" value="Save" />
+{% partial timeslot-form %}
+</form>
+{% endwith %}
+</section>
 {% empty %}
 <p>None found</p>
 {% endfor %}
+</section>
 {% endblock main %}

@@ -1,9 +1,10 @@
 from django.urls import path
 
-from .views import TimeslotListView
+from . import views
 
 
 app_name = "htmx"
 urlpatterns = [
-    path("", TimeslotListView.as_view(), name="timeslot-list"),
+    path("", views.TimeslotListView.as_view(), name="timeslot-list"),
+    path("create/", views.TimeslotCreateView.as_view(), name="timeslot-create"),
 ]

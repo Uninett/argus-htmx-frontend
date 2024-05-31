@@ -1,0 +1,9 @@
+<form style="border: 1px solid black" action="{% url 'htmx:timeslot-create' %}" method="post">
+{% csrf_token %}
+{{ timeslot_form.as_div }}
+<fieldset style="display: flex; flex-direction: column; border: 1px solid black">
+{{ timerecurrence_form.start.as_field_group }}
+{{ timerecurrence_form.end }}
+{{ timerecurrence_form.days }}
+</fieldset>
+</form>

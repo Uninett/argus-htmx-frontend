@@ -87,11 +87,11 @@ address {
     font-style: normal;
 }
 a[href^=mailto\:]:before {
-    content: "<F0><9F><93><A7> "}
+    content: "📧 "}
 a[href^=tel\:]:before {
-    content: "<F0><9F><93><9E> "}
+    content: "📞 "}
 a[href^=sms\:]:before {
-    content: "<F0><9F><92><AC> "}
+    content: "💬 "}
 mark {
     background-color: #e3bc5e;
     background-color: var(--links);
@@ -462,7 +462,8 @@ a {
     color: #00f;
     text-decoration: underline;
 }
-}body nav:first-of-type {
+}
+nav:first-of-type {
     position: fixed;
     top: 0;
     left: 0;
@@ -473,7 +474,7 @@ a {
     width: 100%;
     z-index: 999;
 }
-body nav:first-of-type:before {
+nav:first-of-type:before {
     backdrop-filter: saturate(180%) blur(5px);
     -webkit-backdrop-filter: saturate(180%) blur(5px);
     content: "";
@@ -484,32 +485,32 @@ body nav:first-of-type:before {
     right: 0;
     bottom: 0;
 }
-body nav:first-of-type #brand {
+nav:first-of-type #brand {
     margin-right: auto;
     font-size: 1.1rem;
 }
-body nav:first-of-type a {
+nav:first-of-type a {
     margin: 10px;
     display: inline-block;
 }
-body nav:first-of-type ul {
+nav:first-of-type ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     overflow: hidden;
     display: inline;
 }
-body nav:first-of-type>ul>li {
+nav:first-of-type>ul>li {
     float: left;
 }
-body nav:first-of-type ul li ul {
+nav:first-of-type ul li ul {
     display: none;
     position: absolute;
     background: rgba(0, 0, 0, .5);
     -webkit-backdrop-filter: saturate(180%) blur(5px);
     backdrop-filter: saturate(180%) blur(5px);
 }
-body nav:first-of-type ul li:hover ul {
+nav:first-of-type ul li:hover ul {
     display: block;
 }
 section {

@@ -26,7 +26,6 @@ class IncidentField:
 
 DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
     ("row_select", IncidentField("checkbox", "Selected", "htmx/incidents/_incident_checkbox.html")),
-    ("id", IncidentField("id", "ID", "htmx/incidents/_incident_pk.html")),
     ("start_time", IncidentField("start_time", "Timestamp", "htmx/incidents/_incident_start_time.html")),
     ("status", IncidentField("status", "Status", "htmx/incidents/_incident_status.html")),
     ("level", IncidentField("level", "Severity level", "htmx/incidents/_incident_level.html")),
@@ -34,6 +33,14 @@ DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
     ("description", IncidentField("description", "Description", "htmx/incidents/_incident_description.html")),
     ("links", IncidentField("links", "Actions", None))
 ])
+
+# TODO remove before alpha release
+# Fields for demo/debug/dev purposes
+TEMP_FIELDS = {
+    "id": IncidentField("id", "ID", "htmx/incidents/_incident_pk.html"),
+    "tag": IncidentField("tag", "Tag", "htmx/incidents/_incident_tag.html", context={"tag": "location"}),
+    "ack": IncidentField("ack", "Ack", "htmx/incidents/_incident_ack.html")
+}
 
 
 class IncidentFields:

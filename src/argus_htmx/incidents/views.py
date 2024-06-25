@@ -16,7 +16,7 @@ from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
 from .forms import AckForm
-from .customization import IncidentFields
+from .customization import IncidentFields, TEMP_FIELDS, DEFAULT_FIELDS
 
 LOG = logging.getLogger(__name__)
 
@@ -85,6 +85,17 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
 @require_GET
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     incident_fields = IncidentFields()
+
+    # specify which columns to show and which template goes along with it
+    incident_fields.set_fields(
+        [
+            TEMP_FIELDS["id"],
+            *DEFAULT_FIELDS.values(),
+            TEMP_FIELDS["ack"],
+            TEMP_FIELDS["tag"],
+        ]
+    )
+
     # Load incidents
     qs = prefetch_incident_daughters().order_by("-start_time")
     latest = qs.latest("start_time").start_time
@@ -107,6 +118,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         base_template = "htmx/incidents/_base.html"
 
     context = {
+        **incident_fields.get_merged_context(),
         "count": qs.count(),
         "page_title": "Incidents",
         "base": base_template,

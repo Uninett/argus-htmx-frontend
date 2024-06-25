@@ -54,5 +54,8 @@ class IncidentFields:
     def set_fields(self, fields: list[IncidentField]):
         self.fields = fields
 
+    def get_merged_context(self):
+        return {k: v for field in self.fields if field.context for k, v in field.context.items()}
+
     def __str__(self):
         return self.fields.__str__()

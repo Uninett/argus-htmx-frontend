@@ -25,12 +25,12 @@ class IncidentField:
 
 
 DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
-    ("row_select", IncidentField("checkbox", "Selected", None)),
+    ("row_select", IncidentField("checkbox", "Selected", "htmx/incidents/_incident_checkbox.html")),
     ("id", IncidentField("id", "ID", "htmx/incidents/_incident_pk.html")),
     ("start_time", IncidentField("start_time", "Timestamp", "htmx/incidents/_incident_start_time.html")),
     ("status", IncidentField("status", "Status", "htmx/incidents/_incident_status.html")),
-    ("level", IncidentField("level", "Severity level", None)),
-    ("source", IncidentField("source", "Source", None)),
+    ("level", IncidentField("level", "Severity level", "htmx/incidents/_incident_level.html")),
+    ("source", IncidentField("source", "Source", "htmx/incidents/_incident_source.html")),
     ("description", IncidentField("description", "Description", "htmx/incidents/_incident_description.html")),
     ("links", IncidentField("links", "Actions", None))
 ])

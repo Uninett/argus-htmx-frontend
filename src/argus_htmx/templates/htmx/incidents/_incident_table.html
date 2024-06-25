@@ -6,15 +6,17 @@
 >
     <thead>
     <tr>
-        <th>actions</th>
-        <th>id</th>
-        <th>timestamp</th>
-        <th>status</th>
-        <th>severity</th>
-        <th>source</th>
-        <th>description</th>
-        <th>ack</th>
-        <th>tag</th>
+        {% block customizable_fields %}
+            {% for field in field_list %}
+                <th>
+                    {{ field.label }}
+                </th>
+            {% empty %}
+                <th>
+                    UNDEFINED
+                </th>
+            {% endfor %}
+        {% endblock customizable_fields %}
     </tr>
     </thead>
     <tbody

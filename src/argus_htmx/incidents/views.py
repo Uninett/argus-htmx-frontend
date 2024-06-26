@@ -7,12 +7,13 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render, reverse, get_object_or_404
 
-from django.views.decorators.http import require_GET
+from django.views.decorators.http import require_GET, require_POST, require_http_methods
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django_htmx.middleware import HtmxDetails
 
 from argus.incident.models import Incident
+from argus.incident.filters import IncidentFilter
 from argus.util.datetime_utils import make_aware
 
 from .forms import AckForm
@@ -103,6 +104,49 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
             base_template = "htmx/incidents/responses/_incidents_table_refresh.html"
     else:
         base_template = "htmx/incidents/_base.html"
+
+    context = {
+        "count": qs.count(),
+        "page_title": "Incidents",
+        "base": base_template,
+        "page": page,
+        "last_refreshed": last_refreshed,
+        "update_interval": 30,
+    }
+
+    return render(
+        request,
+        "htmx/incidents/incident_list.html",
+        context=context
+    )
+
+
+@require_GET
+def filtered_incident_list(request: HtmxHttpRequest) -> HttpResponse:
+    # Check if the request is AJAX
+    if not request.htmx:
+        return HttpResponseBadRequest('Invalid request')
+
+    is_open_str = request.GET.get('openState')
+    is_open = ""
+    if is_open_str == "open":
+        is_open = True
+    elif is_open_str == "closed":
+        is_open = False
+
+    filter_data = {
+        "open": is_open,
+    }
+
+    filter = IncidentFilter(filter_data)
+
+    qs = filter.qs.order_by("-start_time")
+    last_refreshed = make_aware(datetime.now())
+
+    # Standard Django pagination
+    page = Paginator(object_list=qs, per_page=10).get_page("1")
+
+    base_template = "htmx/incidents/responses/_incidents_table_poll.html"
 
     context = {
         "count": qs.count(),

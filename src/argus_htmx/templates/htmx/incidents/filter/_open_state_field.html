@@ -1,0 +1,24 @@
+<form
+        id="open-state-filter-form"
+>
+    <fieldset
+            id="open-state-filter-field"
+            hx-get="/incidents/filtered/"
+            hx-target="#table-body"
+            hx-swap="innerHTML"
+            hx-include="[name='openState']"
+
+    >
+        <legend>Open State:</legend>
+        <div>
+            <input type="radio" id="openStateChoiceOpen" name="openState" value="open"/>
+            <label for="openStateChoiceOpen">Open</label>
+
+            <input type="radio" id="openStateChoiceClosed" name="openState" value="closed"/>
+            <label for="openStateChoiceClosed">Closed</label>
+
+            <input type="radio" id="openStateChoiceBoth" name="openState" value="both"/>
+            <label for="openStateChoiceBoth">Both</label>
+        </div>
+    </fieldset>
+</form>

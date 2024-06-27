@@ -23,8 +23,9 @@ LOG = logging.getLogger(__name__)
 def prefetch_incident_daughters():
     return (
         Incident.objects
-        .select_related("source")
+        .defer("metadata", "search_text")
         .prefetch_related(
+            "source",
             "incident_tag_relations",
             "incident_tag_relations__tag",
             "events",
@@ -85,7 +86,8 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     # Load incidents
     qs = prefetch_incident_daughters().order_by("-start_time")
-    latest = qs.latest("start_time").start_time
+    count = Incident.objects.only("id").count()
+    latest = Incident.objects.only("start_time").latest("start_time").start_time
     last_refreshed = make_aware(datetime.now())
 
     # Standard Django pagination
@@ -105,7 +107,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         base_template = "htmx/incidents/_base.html"
 
     context = {
-        "count": qs.count(),
+        "count": count,
         "page_title": "Incidents",
         "base": base_template,
         "page": page,

@@ -92,6 +92,54 @@ Icons, pictures, etc. used by the theme MUST be in a subdirectory named the
 same as the theme (minus the ".css") in the same directory as the theme so
 update the paths accordingly. See the included theme "default.css".
 
+
+UI Settings
+-----------
+
+Table columns override
+~~~~~~~~~~~~~~~~~~~~~~
+Choose which columns are visible in the incidents table.
+
+Via JSON env
+^^^^^^^^^^^^
+
+`table_fields` is a list of dictionaries, each representing a table column that will be displayed.
+Format::
+
+    {
+        "name": str,  # identifier
+        "label": str,  # display value
+        "cell_template": str  # path to template
+
+        "context": Optional[dict]  # context for the template
+    }
+
+Export an environment variable to configure columns that are displayed::
+
+    ARGUS_UI='{"table_fields": [{"name": "id", "label": "id2", "cell_template": "htmx/incidents/_incident_pk.html"}, ...]}'
+
+
+Via local settings override
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In your local settings.py file that star-imports from an `argus-server`_ settings file::
+
+    from argus_htmx.settings.ui_settings import TABLE_FIELDS
+
+    TABLE_FIELDS.set_fields([
+        TEMP_FIELDS["id"],
+        *DEFAULT_FIELDS.values(),
+        TEMP_FIELDS["ack"],
+        TEMP_FIELDS["tag"],
+
+        {
+            "name": "local",
+            "label": "local",
+            "cell_template": "local/incidents/_incident_local.html"
+        },
+    ])
+
+
 .. _CSS Bed: https://www.cssbed.com/
 .. _django-htmx: https://github.com/adamchainz/django-htmx
 .. _argus-server: https://github.com/Uninett/Argus

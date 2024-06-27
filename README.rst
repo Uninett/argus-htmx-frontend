@@ -124,13 +124,14 @@ Via local settings override
 
 In your local settings.py file that star-imports from an `argus-server`_ settings file::
 
+    from argus_htmx.incidents.customization import TEMP_FIELDS, DEFAULT_FIELDS, EXTRA_FIELDS
     from argus_htmx.settings.ui_settings import TABLE_FIELDS
 
     TABLE_FIELDS.set_fields([
         TEMP_FIELDS["id"],
         *DEFAULT_FIELDS.values(),
-        TEMP_FIELDS["ack"],
-        TEMP_FIELDS["tag"],
+        EXTRA_FIELDS["location_tag"],
+        EXTRA_FIELDS["problem_type_tag"],
 
         {
             "name": "local",

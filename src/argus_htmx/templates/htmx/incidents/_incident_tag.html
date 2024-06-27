@@ -1,2 +1,2 @@
 {% load argus_htmx %}
-{{ incident|tagvalues:tag|first }}
+{{ incident|tagvalues:field.context.tag.key|first }}

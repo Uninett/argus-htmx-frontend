@@ -11,7 +11,15 @@ Expected to be customizable in the future [WIP list]:
 """
 
 from dataclasses import dataclass
-from typing import Optional, OrderedDict
+from typing import Optional, OrderedDict, Union
+
+
+@dataclass
+class FieldContext:
+    """Class for providing additional context to a dynamic field."""
+
+    ack: Optional[str] = None  # team or user group
+    tag: Optional[dict] = None  # incident tag name
 
 
 @dataclass
@@ -21,7 +29,7 @@ class IncidentField:
     name: str  # identifier
     label: str  # display value
     cell_template: str
-    context: Optional[dict] = None
+    context: Optional[Union[FieldContext, dict]] = None
 
 
 DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
@@ -38,8 +46,14 @@ DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
 # Fields for demo/debug/dev purposes
 TEMP_FIELDS = {
     "id": IncidentField("id", "ID", "htmx/incidents/_incident_pk.html"),
-    "tag": IncidentField("tag", "Tag", "htmx/incidents/_incident_tag.html", context={"tag": "location"}),
     "ack": IncidentField("ack", "Ack", "htmx/incidents/_incident_ack.html")
+}
+
+EXTRA_FIELDS = {
+    "location_tag": IncidentField("location", "Location", "htmx/incidents/_incident_tag.html",
+                                  context=FieldContext(tag={"key": "location"})),
+    "problem_type_tag": IncidentField("problem_type", "Problem Type", "htmx/incidents/_incident_tag.html",
+                                      context=FieldContext(tag={"key": "problem_type"})),
 }
 
 
@@ -55,7 +69,8 @@ class IncidentFields:
         self.fields = fields
 
     def get_merged_context(self):
-        return {k: v for field in self.fields if field.context for k, v in field.context.items()}
+        return {k: v for field in self.fields if field.context for k, v in
+                (field.context.__dict__.items() if isinstance(field.context, FieldContext) else field.context.items())}
 
     def __str__(self):
         return self.fields.__str__()

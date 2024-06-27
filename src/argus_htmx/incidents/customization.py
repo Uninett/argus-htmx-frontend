@@ -46,7 +46,6 @@ DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
 # Fields for demo/debug/dev purposes
 TEMP_FIELDS = {
     "id": IncidentField("id", "ID", "htmx/incidents/_incident_pk.html"),
-    "ack": IncidentField("ack", "Ack", "htmx/incidents/_incident_ack.html")
 }
 
 EXTRA_FIELDS = {
@@ -54,6 +53,11 @@ EXTRA_FIELDS = {
                                   context=FieldContext(tag={"key": "location"})),
     "problem_type_tag": IncidentField("problem_type", "Problem Type", "htmx/incidents/_incident_tag.html",
                                       context=FieldContext(tag={"key": "problem_type"})),
+    "any_ack": IncidentField("ack", "Ack", "htmx/incidents/_incident_ack.html"),
+    "sd_ack": IncidentField("sd_ack", "SD Ack", "htmx/incidents/_incident_ack.html",
+                            context=FieldContext(ack="sd")),
+    "noc_ack": IncidentField("noc_ack", "NOC Ack", "htmx/incidents/_incident_ack.html",
+                             context=FieldContext(ack="noc")),
 }
 
 

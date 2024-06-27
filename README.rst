@@ -130,6 +130,9 @@ In your local settings.py file that star-imports from an `argus-server`_ setting
     TABLE_FIELDS.set_fields([
         TEMP_FIELDS["id"],
         *DEFAULT_FIELDS.values(),
+        EXTRA_FIELDS["any_ack"],
+        EXTRA_FIELDS["sd_ack"],
+        EXTRA_FIELDS["noc_ack"],
         EXTRA_FIELDS["location_tag"],
         EXTRA_FIELDS["problem_type_tag"],
 

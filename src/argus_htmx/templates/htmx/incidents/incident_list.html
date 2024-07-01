@@ -2,6 +2,10 @@
 
 {% block main %}
     <section>
+    {% include "htmx/incidents/filter/incidents_filter_toolbar.html" %}
+    </section>
+
+    <section>
         {% block table %}
             {% include "htmx/incidents/_incident_table.html" %}
         {% endblock table %}

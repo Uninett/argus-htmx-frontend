@@ -15,7 +15,9 @@ from django_htmx.middleware import HtmxDetails
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
+from argus_htmx.settings.ui_settings import TABLE_FIELDS
 from .forms import AckForm
+from .customization import IncidentFields, TEMP_FIELDS, DEFAULT_FIELDS
 
 LOG = logging.getLogger(__name__)
 
@@ -83,6 +85,8 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
 
 @require_GET
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
+    incident_fields = TABLE_FIELDS or IncidentFields()
+
     # Load incidents
     qs = prefetch_incident_daughters().order_by("-start_time")
     latest = qs.latest("start_time").start_time
@@ -96,7 +100,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     # requests, allowing us to skip rendering the unchanging parts of the
     # template.
     if request.htmx:
-        # HX-Trigger == HTML tag id that iniated the request
+        # HX-Trigger == HTML tag id that initiated the request
         if request.headers.get("HX-Trigger", "") == "table":
             base_template = "htmx/incidents/responses/_incidents_table_poll.html"
         else:
@@ -105,12 +109,14 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         base_template = "htmx/incidents/_base.html"
 
     context = {
+        **incident_fields.get_merged_context(),
         "count": qs.count(),
         "page_title": "Incidents",
         "base": base_template,
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
+        "field_list": incident_fields.get_fields()
     }
 
     return render(

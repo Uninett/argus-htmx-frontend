@@ -73,6 +73,12 @@ class IncidentFields:
         self.fields = fields
 
     def get_merged_context(self):
+        """
+        Merge all context fields into a single dict.
+        Is meant to be used as a context info that is universal for all declared fields.
+        Any duplicates will be overwritten by the last occurrence.
+        :return:
+        """
         return {k: v for field in self.fields if field.context for k, v in
                 (field.context.__dict__.items() if isinstance(field.context, FieldContext) else field.context.items())}
 

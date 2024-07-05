@@ -27,6 +27,6 @@ def isackedby(incident, context=None) -> bool:
         if context.ack is None:
             is_acked = incident.acked
         else:
-            is_acked = incident.is_acked_by(context.ack)
+            is_acked = context.ack in incident.acks.active().group_names()
 
     return is_acked

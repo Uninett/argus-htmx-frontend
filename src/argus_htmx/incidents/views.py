@@ -31,6 +31,7 @@ def prefetch_incident_daughters():
             "incident_tag_relations__tag",
             "events",
             "events__ack",
+            "events__actor",
         )
     )
 

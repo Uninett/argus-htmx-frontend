@@ -1,5 +1,5 @@
 {% load argus_htmx %}
 
 <a href="{% url 'htmx:incident-add-ack' pk=incident.pk %}">
-    {% if incident|isackedby:field.context %}Acked{% else %}Unacked{% endif %}
+    {% if incident|is_acked_by:field.context %}Acked{% else %}Unacked{% endif %}
 </a>

@@ -15,7 +15,7 @@ def tagvalues(incident, key) -> list:
 
 
 @register.filter
-def isackedby(incident, context=None) -> bool:
+def is_acked_by(incident, context=None) -> bool:
     """
     If ack_group is None, return True if incident is acked by any group
     If ack_group is not None, return True if incident is acked by given ack_group

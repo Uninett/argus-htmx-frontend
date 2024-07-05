@@ -18,7 +18,7 @@ from typing import Optional, OrderedDict, Union
 class FieldContext:
     """Class for providing additional context to a dynamic field."""
 
-    ack: Optional[str] = None  # team or user group
+    ack: Optional[str] = None  # team name (via user group)
     tag: Optional[dict] = None  # incident tag name
 
 

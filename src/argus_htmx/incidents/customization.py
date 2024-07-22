@@ -59,15 +59,17 @@ BUILTIN_COLUMNS = {col.name: col for col in _BUILTIN_COLUMN_LIST}
 
 
 def get_incident_table_columns() -> List[IncidentTableColumn]:
-    def _resolve_column(col: Union[str, IncidentTableColumn]):
-        if isinstance(col, str):
-            try:
-                col = BUILTIN_COLUMNS[col]
-            except KeyError:
-                raise ValueError(f"Column '{col}' is not defined")
-            return col
     try:
-        columns  = settings.INCIDENT_TABLE_COLUMNS
+        columns = settings.INCIDENT_TABLE_COLUMNS
     except AttributeError:
         columns = argus_htmx_settings.INCIDENT_TABLE_COLUMNS
     return [_resolve_column(col) for col in columns]
+
+
+def _resolve_column(col: Union[str, IncidentTableColumn]):
+    if isinstance(col, str):
+        try:
+            col = BUILTIN_COLUMNS[col]
+        except KeyError:
+            raise ValueError(f"Column '{col}' is not defined")
+    return col

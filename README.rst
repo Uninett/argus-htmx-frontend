@@ -102,7 +102,7 @@ You can customize which columns are shown in the incidents listing table by over
 ``INCIDENT_TABLE_COLUMNS`` setting. This setting takes a list of ``str`` or
 ``argus_htmx.incidents.customization.IncidentTableColumn`` instances. when given a ``str``, this
 key must be available in the argus_htmx.incidents.customization.BUILTIN_COLUMNS dictionary. For
-example:
+example::
 
     from argus_htmx.incidents.customization import BUILTIN_COLUMNS, IncidentTableColumn
 

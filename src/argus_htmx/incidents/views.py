@@ -2,10 +2,9 @@ import logging
 from typing import Optional
 from datetime import datetime
 
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import render, reverse, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
 from django.views.decorators.http import require_GET
 from django.core.paginator import Paginator
@@ -15,9 +14,9 @@ from django_htmx.middleware import HtmxDetails
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
-from argus_htmx.settings.ui_settings import TABLE_FIELDS
+from argus_htmx.incidents.customization import get_incident_table_columns
+
 from .forms import AckForm
-from .customization import IncidentFields, TEMP_FIELDS, DEFAULT_FIELDS
 
 LOG = logging.getLogger(__name__)
 
@@ -31,7 +30,6 @@ def prefetch_incident_daughters():
             "incident_tag_relations__tag",
             "events",
             "events__ack",
-            "events__actor",
         )
     )
 
@@ -86,11 +84,10 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
 
 @require_GET
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
-    incident_fields = TABLE_FIELDS or IncidentFields()
+    columns = get_incident_table_columns()
 
     # Load incidents
     qs = prefetch_incident_daughters().order_by("-start_time")
-    latest = qs.latest("start_time").start_time
     last_refreshed = make_aware(datetime.now())
 
     # Standard Django pagination
@@ -108,22 +105,14 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
             base_template = "htmx/incidents/responses/_incidents_table_refresh.html"
     else:
         base_template = "htmx/incidents/_base.html"
-
-    number_of_columns = 9  # calculate when customizable columns
     context = {
-        **incident_fields.get_merged_context(),
-        "column_count": number_of_columns,
+        "columns": columns,
         "count": qs.count(),
         "page_title": "Incidents",
         "base": base_template,
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
-        "field_list": incident_fields.get_fields()
     }
 
-    return render(
-        request,
-        "htmx/incidents/incident_list.html",
-        context=context
-    )
+    return render(request, "htmx/incidents/incident_list.html", context=context)

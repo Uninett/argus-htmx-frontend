@@ -2,85 +2,72 @@
 Definitions and defaults for UI customization on the incidents page.
 
 Currently customizable UI elements:
-- table columns: hide default columns and/or show additional columns
-
-Expected to be customizable in the future [WIP list]:
-- table row colors
-- table row effects
-- add custom components to the incidents page
+- table columns: configure what columns to show in the incidents listing
 """
 
 from dataclasses import dataclass
-from typing import Optional, OrderedDict, Union
+from typing import List, Optional, Union
+
+from django.conf import settings
+
+from argus_htmx import settings as argus_htmx_settings
 
 
 @dataclass
-class FieldContext:
-    """Class for providing additional context to a dynamic field."""
+class IncidentTableColumn:
+    """Class for defining a column in the incidents table.
 
-    ack: Optional[str] = None  # team name (via user group)
-    tag: Optional[dict] = None  # incident tag name
-
-
-@dataclass
-class IncidentField:
-    """Class for keeping track of columns in the incidents table."""
+    :param name: identifier for this column
+    :param label: what to show as the column header
+    :param cell_template: template to use when rendering a cell for this column
+    :param context: additional context to pass to the rendering cell. Will be made
+        available as ``cell_context`` in the cell template
+    """
 
     name: str  # identifier
     label: str  # display value
     cell_template: str
-    context: Optional[Union[FieldContext, dict]] = None
+    context: Optional[dict] = None
 
 
-DEFAULT_FIELDS = OrderedDict[str, IncidentField]([
-    ("row_select", IncidentField("checkbox", "Selected", "htmx/incidents/_incident_checkbox.html")),
-    ("start_time", IncidentField("start_time", "Timestamp", "htmx/incidents/_incident_start_time.html")),
-    ("status", IncidentField("status", "Status", "htmx/incidents/_incident_status.html")),
-    ("level", IncidentField("level", "Severity level", "htmx/incidents/_incident_level.html")),
-    ("source", IncidentField("source", "Source", "htmx/incidents/_incident_source.html")),
-    ("description", IncidentField("description", "Description", "htmx/incidents/_incident_description.html")),
-    ("links", IncidentField("links", "Actions", None))
-])
+_BUILTIN_COLUMN_LIST = [
+    IncidentTableColumn("id", "ID", "htmx/incidents/_incident_pk.html"),
+    IncidentTableColumn(
+        "location",
+        "Location",
+        "htmx/incidents/_incident_tag.html",
+        context={"tag": "location"},
+    ),
+    IncidentTableColumn("ack", "Ack", "htmx/incidents/_incident_ack.html"),
+    IncidentTableColumn(
+        "row_select", "Selected", "htmx/incidents/_incident_checkbox.html"
+    ),
+    IncidentTableColumn(
+        "start_time", "Timestamp", "htmx/incidents/_incident_start_time.html"
+    ),
+    IncidentTableColumn("status", "Status", "htmx/incidents/_incident_status.html"),
+    IncidentTableColumn(
+        "level", "Severity level", "htmx/incidents/_incident_level.html"
+    ),
+    IncidentTableColumn("source", "Source", "htmx/incidents/_incident_source.html"),
+    IncidentTableColumn(
+        "description", "Description", "htmx/incidents/_incident_description.html"
+    ),
+    IncidentTableColumn("links", "Actions", "htmx/incidents/_incident_actions.html"),
+]
+BUILTIN_COLUMNS = {col.name: col for col in _BUILTIN_COLUMN_LIST}
 
-# TODO remove before alpha release
-# Fields for demo/debug/dev purposes
-TEMP_FIELDS = {
-    "id": IncidentField("id", "ID", "htmx/incidents/_incident_pk.html"),
-}
 
-EXTRA_FIELDS = {
-    "location_tag": IncidentField("location", "Location", "htmx/incidents/_incident_tag.html",
-                                  context=FieldContext(tag={"key": "location"})),
-    "problem_type_tag": IncidentField("problem_type", "Problem Type", "htmx/incidents/_incident_tag.html",
-                                      context=FieldContext(tag={"key": "problem_type"})),
-    "any_ack": IncidentField("ack", "Ack", "htmx/incidents/_incident_ack.html"),
-    "sd_ack": IncidentField("sd_ack", "SD Ack", "htmx/incidents/_incident_ack.html",
-                            context=FieldContext(ack="sd")),
-    "noc_ack": IncidentField("noc_ack", "NOC Ack", "htmx/incidents/_incident_ack.html",
-                             context=FieldContext(ack="noc")),
-}
-
-
-class IncidentFields:
-
-    def __init__(self):
-        self.fields = list(DEFAULT_FIELDS.values())
-
-    def get_fields(self):
-        return self.fields
-
-    def set_fields(self, fields: list[IncidentField]):
-        self.fields = fields
-
-    def get_merged_context(self):
-        """
-        Merge all context fields into a single dict.
-        Is meant to be used as a context info that is universal for all declared fields.
-        Any duplicates will be overwritten by the last occurrence.
-        :return:
-        """
-        return {k: v for field in self.fields if field.context for k, v in
-                (field.context.__dict__.items() if isinstance(field.context, FieldContext) else field.context.items())}
-
-    def __str__(self):
-        return self.fields.__str__()
+def get_incident_table_columns() -> List[IncidentTableColumn]:
+    def _resolve_column(col: Union[str, IncidentTableColumn]):
+        if isinstance(col, str):
+            try:
+                col = BUILTIN_COLUMNS[col]
+            except KeyError:
+                raise ValueError(f"Column '{col}' is not defined")
+            return col
+    try:
+        columns  = settings.INCIDENT_TABLE_COLUMNS
+    except AttributeError:
+        columns = argus_htmx_settings.INCIDENT_TABLE_COLUMNS
+    return [_resolve_column(col) for col in columns]

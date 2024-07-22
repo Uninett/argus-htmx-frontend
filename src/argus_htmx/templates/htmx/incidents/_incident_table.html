@@ -6,17 +6,17 @@
 >
     <thead>
     <tr>
-        {% block customizable_fields %}
-            {% for field in field_list %}
+        {% block columns %}
+            {% for col in columns %}
                 <th>
-                    {{ field.label }}
+                    {{ col.label }}
                 </th>
             {% empty %}
                 <th>
-                    UNDEFINED
+                    No columns configured
                 </th>
             {% endfor %}
-        {% endblock customizable_fields %}
+        {% endblock columns %}
     </tr>
     </thead>
     <tbody
@@ -28,7 +28,7 @@
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="{{ column_count }}">
+        <td colspan="{{ columns|length }}">
             <!--
             The htmx attributes set on the nav here are inherited by the child links.
             hx-target tells where htmx to swap the fetched content in, and hx-swap

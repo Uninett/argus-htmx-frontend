@@ -96,52 +96,30 @@ update the paths accordingly. See the included theme "default.css".
 UI Settings
 -----------
 
-Table columns override
-~~~~~~~~~~~~~~~~~~~~~~
-Choose which columns are visible in the incidents table.
+Incident table column customization
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+You can customize which columns are shown in the incidents listing table by overriding the
+``INCIDENT_TABLE_COLUMNS`` setting. This setting takes a list of ``str`` or
+``argus_htmx.incidents.customization.IncidentTableColumn`` instances. when given a ``str``, this
+key must be available in the argus_htmx.incidents.customization.BUILTIN_COLUMNS dictionary. For
+example:
 
-Via JSON env
-^^^^^^^^^^^^
+    from argus_htmx.incidents.customization import BUILTIN_COLUMNS, IncidentTableColumn
 
-`table_fields` is a list of dictionaries, each representing a table column that will be displayed.
-Format::
+    INCIDENT_TABLE_COLUMNS = [
+        "id",
+        "start_time",
+        BUILTIN_COLUMNS["description"], # equivalent to just "description"
+        IncidentTableColumn( # a new column definition
+            name="name",
+            label="Custom"
+            cell_template="/path/to/template.html"
+            context={
+                "additional": "value"
+            }
+        )
+    ]
 
-    {
-        "name": str,  # identifier
-        "label": str,  # display value
-        "cell_template": str  # path to template
-
-        "context": Optional[dict]  # context for the template
-    }
-
-Export an environment variable to configure columns that are displayed::
-
-    ARGUS_UI='{"table_fields": [{"name": "id", "label": "id2", "cell_template": "htmx/incidents/_incident_pk.html"}, ...]}'
-
-
-Via local settings override
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-In your local settings.py file that star-imports from an `argus-server`_ settings file::
-
-    from argus_htmx.incidents.customization import TEMP_FIELDS, DEFAULT_FIELDS, EXTRA_FIELDS
-    from argus_htmx.settings.ui_settings import TABLE_FIELDS
-
-    TABLE_FIELDS.set_fields([
-        TEMP_FIELDS["id"],
-        *DEFAULT_FIELDS.values(),
-        EXTRA_FIELDS["any_ack"],
-        EXTRA_FIELDS["sd_ack"],
-        EXTRA_FIELDS["noc_ack"],
-        EXTRA_FIELDS["location_tag"],
-        EXTRA_FIELDS["problem_type_tag"],
-
-        {
-            "name": "local",
-            "label": "local",
-            "cell_template": "local/incidents/_incident_local.html"
-        },
-    ])
 
 
 .. _CSS Bed: https://www.cssbed.com/

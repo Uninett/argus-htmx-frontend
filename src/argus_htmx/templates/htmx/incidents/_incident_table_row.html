@@ -1,15 +1,13 @@
-<tr
-        id="incident-{{ incident.pk }}-row"
->
-    {% block customizable_fields %}
-        {% for field in field_list %}
+<tr id="incident-{{ incident.pk }}-row">
+    {% block columns %}
+        {% for col in columns %}
             <td>
-            {% if field.cell_template %}
-                {% include field.cell_template %}
-            {% else %}
-                UNDEFINED
-            {% endif %}
+                {% if col.cell_template %}
+                    {% include col.cell_template with column=col %}
+                {% else %}
+                    UNDEFINED
+                {% endif %}
             </td>
         {% endfor %}
-    {% endblock customizable_fields %}
+    {% endblock columns %}
 </tr>

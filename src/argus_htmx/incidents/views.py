@@ -109,8 +109,10 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     else:
         base_template = "htmx/incidents/_base.html"
 
+    number_of_columns = 9  # calculate when customizable columns
     context = {
         **incident_fields.get_merged_context(),
+        "column_count": number_of_columns,
         "count": qs.count(),
         "page_title": "Incidents",
         "base": base_template,

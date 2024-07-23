@@ -31,11 +31,10 @@ class IncidentTableColumn:
 
 
 _BUILTIN_COLUMN_LIST = [
-    IncidentTableColumn("id", "ID", "htmx/incidents/_incident_pk.html"),
-    IncidentTableColumn("ack", "Ack", "htmx/incidents/_incident_ack.html"),
     IncidentTableColumn(
         "row_select", "Selected", "htmx/incidents/_incident_checkbox.html"
     ),
+    IncidentTableColumn("id", "ID", "htmx/incidents/_incident_pk.html"),
     IncidentTableColumn(
         "start_time", "Timestamp", "htmx/incidents/_incident_start_time.html"
     ),
@@ -47,6 +46,7 @@ _BUILTIN_COLUMN_LIST = [
     IncidentTableColumn(
         "description", "Description", "htmx/incidents/_incident_description.html"
     ),
+    IncidentTableColumn("ack", "Ack", "htmx/incidents/_incident_ack.html"),
     IncidentTableColumn("links", "Actions", "htmx/incidents/_incident_actions.html"),
 ]
 BUILTIN_COLUMNS = {col.name: col for col in _BUILTIN_COLUMN_LIST}

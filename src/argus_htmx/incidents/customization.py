@@ -32,12 +32,6 @@ class IncidentTableColumn:
 
 _BUILTIN_COLUMN_LIST = [
     IncidentTableColumn("id", "ID", "htmx/incidents/_incident_pk.html"),
-    IncidentTableColumn(
-        "location",
-        "Location",
-        "htmx/incidents/_incident_tag.html",
-        context={"tag": "location"},
-    ),
     IncidentTableColumn("ack", "Ack", "htmx/incidents/_incident_ack.html"),
     IncidentTableColumn(
         "row_select", "Selected", "htmx/incidents/_incident_checkbox.html"

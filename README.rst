@@ -117,7 +117,15 @@ example::
             context={
                 "additional": "value"
             }
-        )
+        ),
+
+        # For reading incident tag values you can use the _incident_tag.html template. eg:
+        IncidentTableColumn(
+            "location",
+            "Location",
+            "htmx/incidents/_incident_tag.html",
+            context={"tag": "location"},
+        ),
     ]
 
 

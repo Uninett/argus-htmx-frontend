@@ -1,21 +1,10 @@
-from django.http import HttpResponse
-from django.template import Template, RequestContext
 from django.urls import path
 
-
-def placeholder(request):
-    template = Template(
-        """{% extends "htmx/base.html" %}
-        {% block main %}
-        <h1>TIMESLOT PLACEHOLDER</h1>
-        {% endblock main %}
-        """
-    )
-    context = RequestContext(request)
-    return HttpResponse(template.render(context))
+from . import views
 
 
 app_name = "htmx"
 urlpatterns = [
-    path("", placeholder, name="timeslot-placeholder"),
+    path("", views.TimeslotListView.as_view(), name="timeslot-list"),
+    path("create/", views.TimeslotCreateView.as_view(), name="timeslot-create"),
 ]

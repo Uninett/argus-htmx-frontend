@@ -9,6 +9,14 @@
   {% endblock head %}
 </head>
 <body {% block body_overrides %}class="override"{% endblock %}>
+  {% if messages %}
+  <section>
+  {% for message in messages %}
+  <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+  {% endfor %}
+  </section>
+  {% endif %}
+
   {% block header %}
   <h1>Argus Server: {{ page_title }}</h1>
   {% endblock header %}

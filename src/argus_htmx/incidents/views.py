@@ -14,9 +14,10 @@ from django_htmx.middleware import HtmxDetails
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
-from argus_htmx.incidents.customization import get_incident_table_columns
-
+from .customization import get_incident_table_columns
+from .filter import incident_list_filter
 from .forms import AckForm
+
 
 LOG = logging.getLogger(__name__)
 
@@ -88,11 +89,17 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
 
     # Load incidents
     qs = prefetch_incident_daughters().order_by("-start_time")
+    total_count = qs.count()
     last_refreshed = make_aware(datetime.now())
+
+    filter_form, qs = incident_list_filter(request, qs)
+    filtered_count = qs.count()
 
     # Standard Django pagination
     page_num = request.GET.get("page", "1")
-    page = Paginator(object_list=qs, per_page=10).get_page(page_num)
+    PAGE_SIZE = 10
+    paginator = Paginator(object_list=qs, per_page=PAGE_SIZE)
+    page = paginator.get_page(page_num)
 
     # The htmx magic - use a different, minimal base template for htmx
     # requests, allowing us to skip rendering the unchanging parts of the
@@ -107,12 +114,15 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         base_template = "htmx/incidents/_base.html"
     context = {
         "columns": columns,
-        "count": qs.count(),
+        "filtered_count": filtered_count,
+        "count": total_count,
+        "filter_form": filter_form,
         "page_title": "Incidents",
         "base": base_template,
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
+        "per_page": PAGE_SIZE,
     }
 
     return render(request, "htmx/incidents/incident_list.html", context=context)

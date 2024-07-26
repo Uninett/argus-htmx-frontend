@@ -15,7 +15,7 @@ from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
-from .filter import incident_list_filter
+from .utils import get_filter_function
 from .forms import AckForm
 
 
@@ -92,6 +92,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     total_count = qs.count()
     last_refreshed = make_aware(datetime.now())
 
+    incident_list_filter = get_filter_function()
     filter_form, qs = incident_list_filter(request, qs)
     filtered_count = qs.count()
 

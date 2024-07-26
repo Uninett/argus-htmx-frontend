@@ -19,7 +19,7 @@ class IncidentFilterForm(forms.Form):
         required=False,
     )
     maxlevel = forms.ChoiceField(
-        choices=((1, 1), (2, 2), (3, 3), (4, 4), (5, 5)),  # fix this, use constant
+        choices=INCIDENT_LEVEL_CHOICES,
         label="Level <=",
         initial=MAX_INCIDENT_LEVEL,
         required=False,

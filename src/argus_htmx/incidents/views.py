@@ -90,10 +90,11 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     qs = prefetch_incident_daughters().order_by("-start_time")
     last_refreshed = make_aware(datetime.now())
 
-    # Standard Django pagination
-    page_num = request.GET.get("page", "1")
-    page = Paginator(object_list=qs, per_page=10).get_page(page_num)
+    params = dict(request.GET.items())
 
+    # Standard Django pagination
+    page_num = params.pop("page", "1")
+    page = Paginator(object_list=qs, per_page=10).get_page(page_num)
     # The htmx magic - use a different, minimal base template for htmx
     # requests, allowing us to skip rendering the unchanging parts of the
     # template.
@@ -113,6 +114,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
+        "query_params": "&".join(f"{k}={v}" for k, v in params.items()),
     }
 
     return render(request, "htmx/incidents/incident_list.html", context=context)

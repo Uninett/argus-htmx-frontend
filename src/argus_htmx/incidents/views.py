@@ -92,12 +92,14 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     total_count = qs.count()
     last_refreshed = make_aware(datetime.now())
 
+    params = dict(request.GET.items())
+
     incident_list_filter = get_filter_function()
     filter_form, qs = incident_list_filter(request, qs)
     filtered_count = qs.count()
 
     # Standard Django pagination
-    page_num = request.GET.get("page", "1")
+    page_num = params.pop("page", "1")
     PAGE_SIZE = 10
     paginator = Paginator(object_list=qs, per_page=PAGE_SIZE)
     page = paginator.get_page(page_num)
@@ -124,6 +126,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "last_refreshed": last_refreshed,
         "update_interval": 30,
         "per_page": PAGE_SIZE,
+        "query_params": "&".join(f"{k}={v}" for k, v in params.items()),
     }
 
     return render(request, "htmx/incidents/incident_list.html", context=context)

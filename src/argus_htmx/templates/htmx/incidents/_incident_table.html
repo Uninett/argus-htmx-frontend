@@ -1,5 +1,5 @@
 <table id="table"
-       hx-get="?page={{ page.number }}"
+       hx-get="?page={{ page.number }}&{{ query_params }}"
        hx-target="#table-body"
        hx-swap="innerHTML"
        hx-trigger="every {{ update_interval|default:'30' }}s"
@@ -47,15 +47,15 @@
                               page works without JavaScript, and to ensure the link is
                               displayed as clickable.
                             -->
-                            <a hx-get="?page=1" href="?page=1">
+                            <a hx-get="?page=1&{{ query_params }}" href="?page=1&{{ query_params }}">
                                 &laquo; First
                             </a>
                         </li>
                     {% endif %}
                     {% if page.has_previous %}
                         <li>
-                            <a hx-get="?page={{ page.previous_page_number }}"
-                               href="?page={{ page.previous_page_number }}">
+                            <a hx-get="?page={{ page.previous_page_number }}&{{ query_params }}"
+                               href="?page={{ page.previous_page_number }}&{{ query_params }}">
                                 {{ page.previous_page_number }}
                             </a>
                         </li>
@@ -65,16 +65,16 @@
                     </li>
                     {% if page.has_next %}
                         <li>
-                            <a hx-get="?page={{ page.next_page_number }}"
-                               href="?page={{ page.next_page_number }}">
+                            <a hx-get="?page={{ page.next_page_number }}&{{ query_params }}"
+                               href="?page={{ page.next_page_number }}&{{ query_params }}">
                                 {{ page.next_page_number }}
                             </a>
                         </li>
                     {% endif %}
                     {% if page.number != page.paginator.num_pages %}
                         <li>
-                            <a hx-get="?page={{ page.paginator.num_pages }}"
-                               href="?page={{ page.paginator.num_pages }}">
+                            <a hx-get="?page={{ page.paginator.num_pages }}&{{ query_params }}"
+                               href="?page={{ page.paginator.num_pages }}&{{ query_params }}">
                                 &raquo; Last
                             </a>
                         </li>

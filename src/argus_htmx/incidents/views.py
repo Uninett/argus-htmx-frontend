@@ -126,7 +126,6 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "last_refreshed": last_refreshed,
         "update_interval": 30,
         "per_page": PAGE_SIZE,
-        "query_params": "&".join(f"{k}={v}" for k, v in params.items()),
     }
 
     return render(request, "htmx/incidents/incident_list.html", context=context)

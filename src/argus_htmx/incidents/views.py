@@ -108,11 +108,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     # requests, allowing us to skip rendering the unchanging parts of the
     # template.
     if request.htmx:
-        # HX-Trigger == HTML tag id that initiated the request
-        if request.headers.get("HX-Trigger", "") == "table":
-            base_template = "htmx/incidents/responses/_incidents_table_poll.html"
-        else:
-            base_template = "htmx/incidents/responses/_incidents_table_refresh.html"
+        base_template = "htmx/incidents/responses/_incidents_table_refresh.html"
     else:
         base_template = "htmx/incidents/_base.html"
     context = {

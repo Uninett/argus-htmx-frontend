@@ -12,15 +12,6 @@
     </section>
 
     <section>
-        <dl>
-          <dt>Total, all time</dt>
-          <dd> {{ count }}</dd>
-          <dt>After filtering</dt>
-          <dd> {{ filtered_count }}</dd>
-          <dt>Per page</dt>
-          <dd>{{ per_page }}</dd>
-        </dl>
-
         {% block refresh_info %}
             {% include "htmx/incidents/_incidents_refresh_info.html" %}
         {% endblock refresh_info %}

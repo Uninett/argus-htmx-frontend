@@ -1,14 +1,16 @@
 {% extends "htmx_base.html" %}
-
+{% load static %}
 {% block head %}
 <script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
 <!-- HTMX Config -->
 <meta name="htmx-config" content='{"useTemplateFragments":"true"}'>
 {% if theme %}
-<link rel="stylesheet" href="/static/themes/{{ theme }}.css" />
+{% with "themes/"|add:theme|add:".css" as theme_name %}
+<link rel="stylesheet" href="{% static theme_name %}" />
+{% endwith %}
 {% else %}
-<link rel="stylesheet" href="/static/color-schemes/light.css" media="(prefers-color-scheme: light)" />
-<link rel="stylesheet" href="/static/color-schemes/dark.css" media="(prefers-color-scheme: dark)" />
+<link rel="stylesheet" href="{% static "color-schemes/light.css" %}" media="(prefers-color-scheme: light)" />
+<link rel="stylesheet" href="{% static "color-schemes/dark.css" %}" media="(prefers-color-scheme: dark)" />
 {% endif %}
 <style>
 body.override {
@@ -33,7 +35,7 @@ margin-right: 0;
 .override > header > nav > ul, .override nav > ul {
   max-width: 100%;
   display: flex;
-  align-items: baseline;
+  align-items: center;
   font-weight: bold;
   list-style: none;
   gap: 1rem;
@@ -81,7 +83,7 @@ header nav ul {
 <header>
 <nav>
 <ul>
-<li><a href="{% url 'htmx:incident-list' %}"><span>Logo</span> Argus: {{ page_title }}</a></li>
+<li><a href="{% url 'htmx:incident-list' %}"><img width="100" height="100" src="{% static "logo_white.svg" %}" alt="Argus"></a></li>
 <li><a href="{% url 'htmx:timeslot-placeholder' %}">Timeslots</a></li>
 <li><a href="{% url 'htmx:notificationprofile-placeholder' %}">Profiles</a></li>
 <li>Theme: <a href="{% url 'htmx:theme-list' %}">{{ theme }}</a></li>

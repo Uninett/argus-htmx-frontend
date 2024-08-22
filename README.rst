@@ -100,15 +100,21 @@ Installation and build instructions
 Recommended but open for tweaks and adaptations steps:
 
 1. Get Tailwind standalone CLI bundled with daisyUI from
-   https://github.com/dobicinaitis/tailwind-cli-extra::
+   https://github.com/dobicinaitis/tailwind-cli-extra
+
+   Most linux::
 
         $ curl -sL https://github.com/dobicinaitis/tailwind-cli-extra/releases/latest/download/tailwindcss-extra-linux-x64 -o /tmp/tailwindcss
         $ chmod +x /tmp/tailwindcss
 
+   For other OSes see
+   https://github.com/dobicinaitis/tailwind-cli-extra/releases/latest/ and
+   update the bit after ``download/`` accordingly.
+
    Optionally you can compile tailwind+daisyUI standalone cli bundle yourself as described here:
    https://github.com/tailwindlabs/tailwindcss/discussions/12294#discussioncomment-8268378.
 2. (Linux/OsX) Move the tailwindcss file to your $PATH, for instance to ``~/bin/`` or ``.local/bin``.
-3. Cd to your repo directory. repo-dir
+3. Go to the repo directory (parent of ``src/``)
 4. Build main stylesheet file using ``tailwindcss`` executable from step 1 and pointing to the included config file::
 
         tailwindcss -c src/argus_htmx/tailwind/tailwind.config.js -i src/argus_htmx/tailwind/styles.css --output sr/argus/static/styles.css

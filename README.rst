@@ -196,8 +196,7 @@ How to customize the look:
 *  Generate Tailwind config file by running ``tailwind_config`` management
    command. By default the generated file will be based on
    ``src/argus_htmx/tailwindtheme/tailwind.config.template.js`` and expected
-   values will be injected with reasonable defaults. For customization options
-   see `Customization`_.
+   values will be injected with reasonable defaults.
 
 UI Settings
 -----------

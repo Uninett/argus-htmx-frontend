@@ -129,7 +129,7 @@ Customization
 How to customize the look:
 
 
-1. Override Argus' Tailwind CSS theme defaults and/or choose which daisyUI
+*  Override Argus' Tailwind CSS theme defaults and/or choose which daisyUI
    color themes to include. You can do so by updating the default
    ``TAILWIND_THEME_OVERRIDE`` and ``DAISYUI_THEMES`` values respectively
    before running a ``tailwind_config`` management command:
@@ -191,9 +191,9 @@ How to customize the look:
     * `list of daisyUI color names`_
     * `Tailwind CSS theme customization`_
 
-2. Override the default main stylesheet path by providing a ``path_to_stylesheet`` value in a template ``context``.
-3. Include additional styles/stylesheets using ``head`` block in your templates.
-4. Generate Tailwind config file by running ``tailwind_config`` management
+*  Override the default main stylesheet path by providing a ``path_to_stylesheet`` value in a template ``context``.
+*  Include additional styles/stylesheets using ``head`` block in your templates.
+*  Generate Tailwind config file by running ``tailwind_config`` management
    command. By default the generated file will be based on
    ``src/argus_htmx/tailwindtheme/tailwind.config.template.js`` and expected
    values will be injected with reasonable defaults. For customization options

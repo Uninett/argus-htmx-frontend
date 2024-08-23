@@ -25,17 +25,16 @@
             </div>
             <div class="navbar-end">
                 {% block userlink %}
-
                     {% if request.user.is_authenticated %}
-                        <div class="dropdown dropdown-end">
-                            <div tabindex="0" role="button" class="btn btn-base-200 btn-circle avatar placeholder">
-                                <div class="w-10 rounded-full ring-base-200 ring-offset-primary ring ring-offset-2">
-                                    <span class="text-2xl capitalize">{{ request.user|make_list|first }}</span>
-                                </div>
-                            </div>
-                            <ul
-                                    tabindex="0"
-                                    class="menu menu-sm dropdown-content bg-base-200 text-base-content rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <details class="dropdown dropdown-end">
+                            <summary class="btn btn-base-200 btn-circle avatar placeholder"
+                                     aria-description="User menu">
+                                <span aria-hidden="true"
+                                      class="size-10 rounded-full ring-base-200 ring-offset-primary ring ring-offset-2 text-2xl capitalize leading-9">
+                                    {{ request.user|make_list|first }}
+                                </span>
+                            </summary>
+                            <ul class="menu menu-sm dropdown-content bg-base-200 text-base-content rounded-box z-[1] mt-3 w-52 p-2 shadow">
                                 <li class="menu-title">
                                     Logged in as: <span class="text-info">{{ request.user }}</span>
                                     <div class="divider divider-secondary my-0"></div>
@@ -53,7 +52,7 @@
                                     </form>
                                 </li>
                             </ul>
-                        </div>
+                        </details>
                     {% else %}
                         <a class="btn" href="{% url 'htmx:login' %}">Log in</a>
                     {% endif %}

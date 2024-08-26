@@ -43,7 +43,7 @@ In your local settings that star-imports from an `argus-server`_ settings file::
         "argus_htmx",
         "widget_tweaks",
     ]
-    ROOT_URLCONF = "urls.py"
+    ROOT_URLCONF = "urls"
     MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]
 
 In the same file, add a copy of the entirety of ``TEMPLATES``. Choose one of

@@ -53,6 +53,8 @@ path to the end of the ``context_processors`` list.
 
 Next to ``localsettings.py`` create an ``urls.py`` containing::
 
+   from django.urls import path, include
+
    from argus.site.urls import urlpatterns
 
    urlpatterns += [

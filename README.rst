@@ -56,7 +56,7 @@ Next to ``localsettings.py`` create an ``urls.py`` containing::
    from argus.site.urls import urlpatterns
 
    urlpatterns += [
-       path("", include("argus_htmx.urls")
+       path("", include("argus_htmx.urls"))
    ]
 
 With EXTRA_APPS

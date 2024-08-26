@@ -1,9 +1,9 @@
 <p class="sr-only">
     {{ label }}
 </p>
-<form>
-    <label for="select-all-visible" class="sr-only">Select all visible</label>
-    <input id="select-all-visible" type="checkbox" class="checkbox checkbox-sm checkbox-accent border"
-           hx-on:click="htmx.findAll('.row-select').forEach(peer => peer.checked = event.target.checked)"
-    />
-</form>
+<label for="select-all-visible" class="sr-only">Select all visible</label>
+<input id="select-all-visible" type="checkbox" class="checkbox checkbox-sm checkbox-accent border"
+       hx-on:change="htmx.findAll('.row-select').forEach(peer => peer.checked = event.target.checked);
+       event.target.checked ? htmx.find('.tab-select').checked = event.target.checked : null;
+"
+/>

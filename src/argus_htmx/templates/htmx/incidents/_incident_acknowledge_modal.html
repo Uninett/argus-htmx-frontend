@@ -1,5 +1,5 @@
 {% extends 'htmx/_base_form_modal.html' %}
 {% block dialogform %}
-<input id="description" placeholder="Acknowledgment message" />
-<input id="expiration" placeholder="Expiry date" type="date" />
+<input name="description" type="text" placeholder="Acknowledgment message" class="input input-bordered w-full max-w-xs" />
+<input name="expiration" type="date" placeholder="Expiry date" class="input input-bordered w-full max-w-xs" />
 {% endblock dialogform %}

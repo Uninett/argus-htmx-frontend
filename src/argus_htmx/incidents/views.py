@@ -93,7 +93,6 @@ def _incident_add_ack(pk: int, formdata, user: User, group: Optional[str] = None
     return incident, context
 
 
-@require_POST
 def incident_add_ack(request, pk: int, group: Optional[str] = None):
     formdata = request.POST or None
     _, context = _incident_add_ack(pk, formdata, request.user, group)

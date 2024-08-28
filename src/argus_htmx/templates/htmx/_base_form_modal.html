@@ -4,17 +4,17 @@
     {{ button_title }}
 </button>
 <dialog id="{{ dialog_id }}" class="modal">
-    <div class="modal-box">
-        <div class="divider divider-start divider-secondary"><h3 class="text-lg font-bold">{{ header }}</h3></div>
-        <form id="{{ dialog_id }}-form" class="py-2" method="post" action="{{ endpoint }}">
+    <div class="modal-box card card-compact shadow-xl">
+        <div class="divider divider-start divider-secondary"><h3 class="card-title">{{ header }}</h3></div>
+        <form id="{{ dialog_id }}-form" class="card-body" method="post" action="{{ endpoint }}">
             {% csrf_token %}
-            <fieldset class="flex flex-col gap-2">
-                <legend class="text-info">{{ explanation }}</legend>
+            <fieldset class="menu menu-vertical gap-2">
+                <legend class="menu-title p-0 text-info">{{ explanation }}</legend>
                 {% block dialogform %}
                 {% endblock dialogform %}
             </fieldset>
         </form>
-        <div class="modal-action">
+        <div class="modal-action card-actions">
             <form method="dialog" class="w-full">
                 <div class="divider divider-end divider-secondary">
                     <button type="submit" form="{{ dialog_id }}-form"

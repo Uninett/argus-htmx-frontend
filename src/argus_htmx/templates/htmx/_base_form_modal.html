@@ -5,17 +5,19 @@
 </button>
 <dialog id="{{ dialog_id }}" class="modal">
     <div class="modal-box">
-        <h3 class="text-lg font-bold">{{ header }}</h3>
-        <p class="py-4">{{ explanation }}</p>
-        <form id="{{ dialog_id }}-form" class="py-4" method="post" action="{{ endpoint }}">
+        <div class="divider divider-start divider-secondary"><h3 class="text-lg font-bold">{{ header }}</h3></div>
+        <form id="{{ dialog_id }}-form" class="py-2" method="post" action="{{ endpoint }}">
             {% csrf_token %}
             {% block dialogform %}
             {% endblock dialogform %}
         </form>
         <div class="modal-action">
-            <form method="dialog">
-                <button type="submit" form="{{ dialog_id }}-form" class="btn btn-primary">{{ submit_text }}</button>
-                <button class="btn">{{ cancel_text }}</button>
+            <form method="dialog" class="w-full">
+                <div class="divider divider-end divider-secondary">
+                    <button type="submit" form="{{ dialog_id }}-form"
+                            class="btn btn-primary">{{ submit_text }}</button>
+                    <button class="btn">{{ cancel_text }}</button>
+                </div>
             </form>
         </div>
     </div>

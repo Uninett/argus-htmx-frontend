@@ -8,8 +8,11 @@
         <div class="divider divider-start divider-secondary"><h3 class="text-lg font-bold">{{ header }}</h3></div>
         <form id="{{ dialog_id }}-form" class="py-2" method="post" action="{{ endpoint }}">
             {% csrf_token %}
-            {% block dialogform %}
-            {% endblock dialogform %}
+            <fieldset class="flex flex-col gap-2">
+                <legend class="text-info">{{ explanation }}</legend>
+                {% block dialogform %}
+                {% endblock dialogform %}
+            </fieldset>
         </form>
         <div class="modal-action">
             <form method="dialog" class="w-full">

@@ -8,8 +8,8 @@
         <div class="divider divider-start divider-secondary"><h3 class="card-title">{{ header }}</h3></div>
         <form id="{{ dialog_id }}-form" class="card-body" method="post" action="{{ endpoint }}">
             {% csrf_token %}
-            <fieldset class="menu menu-vertical gap-2">
-                <legend class="menu-title p-0 text-info">{{ explanation }}</legend>
+            <fieldset class="menu menu-vertical gap-4">
+                <legend class="menu-title px-0 text-primary">{{ explanation }}</legend>
                 {% block dialogform %}
                 {% endblock dialogform %}
             </fieldset>

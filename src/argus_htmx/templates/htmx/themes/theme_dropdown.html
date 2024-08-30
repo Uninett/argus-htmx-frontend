@@ -1,9 +1,9 @@
-<details class="dropdown">
+<details>
     <summary>
         Theme
         <span id="theme-badge" class="badge badge-primary">{{ theme }}</span>
     </summary>
-    <ul class="menu dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl">
+    <ul>
         <li
                 hx-get="{% url 'htmx:theme-names' %}"
                 hx-target="closest ul"

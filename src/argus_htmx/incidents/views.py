@@ -6,6 +6,7 @@ from datetime import datetime
 
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.contrib import messages
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import reverse
@@ -111,6 +112,10 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
 @require_POST
 def incident_detail_close(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
+    if incident.end_time is None or incident.stateless_events():
+        LOG.warning(f"Attempt at closing the uncloseable {incident}")
+        messages.warning(f"Did not close {incident}, stateless incidents cannot be closed.")
+        return redirect("htmx:incident-detail", pk=pk)
     form = DescriptionForm(request.POST or None)
     if form.is_valid():
         incident.set_closed(
@@ -123,6 +128,10 @@ def incident_detail_close(request, pk: int):
 @require_POST
 def incident_detail_reopen(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
+    if incident.end_time is None or incident.stateless_events():
+        LOG.warning(f"Attempt at reopening the unopenable {incident}")
+        messages.warning(f"Did not reopen {incident}, stateless incidents cannot be reopened.")
+        return redirect("htmx:incident-detail", pk=pk)
     form = DescriptionForm(request.POST or None)
     if form.is_valid():
         incident.set_open(

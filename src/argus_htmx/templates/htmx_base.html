@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% block title %}<title>Argus Server: {{ page_title }}</title>{% endblock %}
 
+    <script src="{% static "htmx.min.js" %}"></script>
+    <!-- HTMX Config -->
+    <meta name="htmx-config" content='{"useTemplateFragments":"true"}'>
     <link rel="stylesheet" href="{% static path_to_stylesheet|default:"styles.css" %}">
 
     {% block head %}

@@ -112,7 +112,7 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
 @require_POST
 def incident_detail_close(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
-    if incident.end_time is None or incident.stateless_event():
+    if not incident.stateful:
         LOG.warning(f"Attempt at closing the uncloseable {incident}")
         messages.warning(request, f"Did not close {incident}, stateless incidents cannot be closed.")
         return redirect("htmx:incident-detail", pk=pk)
@@ -128,7 +128,7 @@ def incident_detail_close(request, pk: int):
 @require_POST
 def incident_detail_reopen(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
-    if incident.end_time is None or incident.stateless_event():
+    if not incident.stateful:
         LOG.warning(f"Attempt at reopening the unopenable {incident}")
         messages.warning(request, f"Did not reopen {incident}, stateless incidents cannot be reopened.")
         return redirect("htmx:incident-detail", pk=pk)

@@ -7,8 +7,6 @@
     {% block title %}<title>Argus Server: {{ page_title }}</title>{% endblock %}
     <!-- HTMX -->
     <script src="{% static "htmx-2.0.2.min.js" %}"></script>
-    <!-- HTMX Config -->
-    <meta name="htmx-config" content='{"useTemplateFragments":"true"}'>
     <link rel="stylesheet" href="{% static path_to_stylesheet|default:"styles.css" %}">
 
     {% block head %}

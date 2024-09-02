@@ -250,3 +250,5 @@ injects a ``incidents_extra_widget`` variable that points to a html template::
         return {
             "incidents_extra_widget": "path/to/_extra_widget.html",
         }
+
+*note* don't forget to include the context processor in your settings

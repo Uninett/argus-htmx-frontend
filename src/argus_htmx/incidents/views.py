@@ -20,7 +20,7 @@ from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
-from .forms import AckForm
+from .forms import AckForm, DescriptionForm
 
 
 User = get_user_model()
@@ -57,6 +57,8 @@ def incident_detail(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
     action_endpoints = {
         "ack": reverse("htmx:incident-detail-add-ack", kwargs={"pk": pk}),
+        "close": reverse("htmx:incident-detail-close", kwargs={"pk": pk}),
+        "reopen": reverse("htmx:incident-detail-reopen", kwargs={"pk": pk}),
     }
     context = {
         "incident": incident,
@@ -103,6 +105,30 @@ def incident_add_ack(request, pk: int, group: Optional[str] = None):
 def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
     formdata = request.POST or None
     _incident_add_ack(pk, formdata, request.user, group)
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_close(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = DescriptionForm(request.POST or None)
+    if form.is_valid():
+        incident.set_closed(
+            request.user,
+            description=form.cleaned_data.get("description", ""),
+        )
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_reopen(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = DescriptionForm(request.POST or None)
+    if form.is_valid():
+        incident.set_open(
+            request.user,
+            description=form.cleaned_data.get("description", ""),
+        )
     return redirect("htmx:incident-detail", pk=pk)
 
 

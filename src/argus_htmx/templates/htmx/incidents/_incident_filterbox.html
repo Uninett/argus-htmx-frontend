@@ -18,13 +18,11 @@
                             {{ field|add_class:"checkbox checkbox-accent border" }}
                         {% elif field.name == "maxlevel" %}
                             <div>
-                                {{ field|add_class:"range" }}
+                                {{ field|add_class:"range range-primary" }}
                                 <div class="flex w-full justify-between px-2 text-xs">
-                                    <span>|</span>
-                                    <span>|</span>
-                                    <span>|</span>
-                                    <span>|</span>
-                                    <span>|</span>
+                                    {% for tick in "12345" %}
+                                    <span>{{ tick }}</span>
+                                    {% endfor %}
                                 </div>
                             </div>
                         {% elif field|field_type == "choicefield" %}

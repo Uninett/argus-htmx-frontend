@@ -112,7 +112,7 @@ On every new version, reinstall the dependencies since there might be new ones.
 Themes and styling
 ------------------
 
-To try out class-less themes use the context processor
+To try out daisyUI themes use the context processor
 ``argus_htmx.context_processor.theme_via_session`` instead of
 ``argus_htmx.context_processor.theme_via_GET``.
 

@@ -53,6 +53,8 @@ file) at minimum add::
         "django_htmx.middleware.HtmxMiddleware",
         "argus_htmx.middleware.LoginRequiredMiddleware",
     ]
+    LOGIN_URL = "/accounts/login"
+    LOGIN_REDIRECT_URL = "/incidents/"
     PUBLIC_URLS = [
         "/accounts/login/",
         "/api/",
@@ -89,6 +91,17 @@ As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
 
 With EXTRA_APPS
 ~~~~~~~~~~~~~~~
+
+It is necessary to override some settings.
+
+In for instance your ``localsettings.py``, add::
+
+    LOGIN_URL = "/accounts/login"
+    LOGIN_REDIRECT_URL = "/incidents/"
+    PUBLIC_URLS = [
+        "/accounts/login/",
+        "/api/",
+    ]
 
 If you use a shell script to control ``manage.py``, add the following
 environment variable::

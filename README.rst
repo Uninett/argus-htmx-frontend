@@ -49,12 +49,32 @@ file) at minimum add::
         "widget_tweaks",
     ]
     ROOT_URLCONF = "urls"
-    MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]
-
-In the same file, add a copy of the entirety of ``TEMPLATES``. Choose one of
-the functions in ``argus_htmx.context_processors``. In the entry for
-``django.template.backends.django.DjangoTemplates``, append the full dotted
-path to the end of the ``context_processors`` list.
+    MIDDLEWARE += [
+        "django_htmx.middleware.HtmxMiddleware",
+    ]
+    PUBLIC_URLS = [
+        "/accounts/login/",
+        "/api/",
+    ]
+    TEMPLATES = [
+        {
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": [str(SITE_DIR / "templates")],
+            "APP_DIRS": True,
+            "OPTIONS": {
+                "debug": get_bool_env("TEMPLATE_DEBUG", False),
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
+                    "social_django.context_processors.backends",
+                    "social_django.context_processors.login_redirect",
+                    "argus_htmx.context_processors.theme_via_session",
+                ],
+            },
+        }
+    ]
 
 As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
 

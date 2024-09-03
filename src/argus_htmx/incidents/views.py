@@ -21,7 +21,7 @@ from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
-from .forms import AckForm, DescriptionForm
+from .forms import AckForm, DescriptionOptionalForm
 
 
 User = get_user_model()
@@ -116,12 +116,13 @@ def incident_detail_close(request, pk: int):
         LOG.warning(f"Attempt at closing the uncloseable {incident}")
         messages.warning(request, f"Did not close {incident}, stateless incidents cannot be closed.")
         return redirect("htmx:incident-detail", pk=pk)
-    form = DescriptionForm(request.POST or None)
+    form = DescriptionOptionalForm(request.POST or None)
     if form.is_valid():
         incident.set_closed(
             request.user,
             description=form.cleaned_data.get("description", ""),
         )
+        LOG.info(f"{{ incident }} manually closed by {{ request.user }}")
     return redirect("htmx:incident-detail", pk=pk)
 
 
@@ -132,12 +133,13 @@ def incident_detail_reopen(request, pk: int):
         LOG.warning(f"Attempt at reopening the unopenable {incident}")
         messages.warning(request, f"Did not reopen {incident}, stateless incidents cannot be reopened.")
         return redirect("htmx:incident-detail", pk=pk)
-    form = DescriptionForm(request.POST or None)
+    form = DescriptionOptionalForm(request.POST or None)
     if form.is_valid():
         incident.set_open(
             request.user,
             description=form.cleaned_data.get("description", ""),
         )
+        LOG.info(f"{{ incident }} manually reopened by {{ request.user }}")
     return redirect("htmx:incident-detail", pk=pk)
 
 

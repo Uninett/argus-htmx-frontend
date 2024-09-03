@@ -5,6 +5,6 @@ class AckForm(forms.Form):
     expiration = forms.DateTimeField(required=False)
 
 
-class DescriptionForm(forms.Form):
+class DescriptionOptionalForm(forms.Form):
     "For closing/reopening"
-    description = forms.CharField()
+    description = forms.CharField(required=False)

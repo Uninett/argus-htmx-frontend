@@ -228,12 +228,6 @@ example::
 
     ]
 
-Then you could create ``/path/to/template.html`` as following::
-
-    <div id="service-status" class="border border-primary rounded-2xl h-full p-2">
-      My custom widget
-    </div>
-
 For inbuilt support for other types of columns see the howtos in `the local docs <docs/howtos/>`_.
 
 
@@ -258,3 +252,9 @@ injects a ``incidents_extra_widget`` variable that points to a html template::
         }
 
 *note* don't forget to include the context processor in your settings
+
+You could then create ``path/to/_extra_widget.html`` as following::
+
+    <div id="service-status" class="border border-primary rounded-2xl h-full p-2">
+      My custom widget
+    </div>

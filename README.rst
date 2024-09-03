@@ -90,18 +90,45 @@ As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
 With EXTRA_APPS
 ~~~~~~~~~~~~~~~
 
-Choose one of the functions in ``argus_htmx.context_processors``, exemplified
-by "theme_via_GET" below.
+If you use a shell script to control ``manage.py``, add the following
+environment variable::
 
-In your environment variables::
+    export ARGUS_EXTRA_APPS=`cat extra.json`
 
-    ARGUS_EXTRA_APPS = '[{"app_name": "django_htmx"}, {"app_name": "argus_htmx", "urls": {"path": "", "urlpatterns_module": "argus_htmx.urls"}, "context_processors": ["argus_htmx.context_processor.theme_via_GET"]}, {"app_name": "widget_tweaks"}]'
+In the file ``extra.json``, (which can be syntax checked with for instance
+``jq``), a sibling to ``localsettings.py``::
 
-In your local settings that star-imports from an `argus-server`_ settings file::
-
-    MIDDLEWARE += [
-        "django_htmx.middleware.HtmxMiddleware",
-        "argus_htmx.middleware.LoginRequiredMiddleware",
+    [
+      {
+        "app_name": "django_htmx",
+        "middleware": {
+          "django_htmx.middleware.HtmxMiddleware": "end"
+        }
+      },
+      {
+        "app_name": "argus_htmx",
+        "urls": {
+          "path": "",
+          "urlpatterns_module": "argus_htmx.urls"
+        },
+        "context_processors": [
+          "argus_htmx.context_processors.theme_via_session"
+        ],
+        "middleware": {
+          "argus_htmx.middleware.LoginRequiredMiddleware": "end"
+        }
+      },
+      {
+        "app_name": "template_partials"
+      },
+      {"app_name": "widget_tweaks"},
+      {
+        "app_name": "debug_toolbar",
+        "urls": {
+          "path": "__debug__/",
+          "urlpatterns_module": "debug_toolbar.urls"
+        }
+      }
     ]
 
 Update

@@ -51,6 +51,7 @@ file) at minimum add::
     ROOT_URLCONF = "urls"
     MIDDLEWARE += [
         "django_htmx.middleware.HtmxMiddleware",
+        "argus_htmx.middleware.LoginRequiredMiddleware",
     ]
     PUBLIC_URLS = [
         "/accounts/login/",
@@ -98,7 +99,10 @@ In your environment variables::
 
 In your local settings that star-imports from an `argus-server`_ settings file::
 
-    MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]
+    MIDDLEWARE += [
+        "django_htmx.middleware.HtmxMiddleware",
+        "argus_htmx.middleware.LoginRequiredMiddleware",
+    ]
 
 Update
 ------

@@ -230,9 +230,7 @@ example::
 
 Then you could create ``/path/to/template.html`` as following::
 
-    <div id="service-status"
-         class="border border-primary rounded-2xl h-full p-2"
-         >
+    <div id="service-status" class="border border-primary rounded-2xl h-full p-2">
       My custom widget
     </div>
 

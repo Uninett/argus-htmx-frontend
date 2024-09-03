@@ -36,7 +36,12 @@ Do this in your workdir, which could be the checked out `argus-server`_ repo.
 Django-style
 ~~~~~~~~~~~~
 
-In your local settings that star-imports from an `argus-server`_ settings file::
+This assumes that you have a local settings file (we recommend calling it
+"localsettings.py" since that is hidden by .gitignore) as a sibling of
+``src/``.
+
+In this local settings file (that star-imports from an `argus-server`_ settings
+file) at minimum add::
 
     INSTALLED_APPS += [
         "django_htmx",
@@ -51,7 +56,7 @@ the functions in ``argus_htmx.context_processors``. In the entry for
 ``django.template.backends.django.DjangoTemplates``, append the full dotted
 path to the end of the ``context_processors`` list.
 
-Next to ``localsettings.py`` create an ``urls.py`` containing::
+As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
 
    from django.urls import path, include
 

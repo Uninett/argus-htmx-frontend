@@ -2,11 +2,11 @@
 {% load widget_tweaks %}
 
 {% block main %}
-<div class="card">
+<div class="card m-8">
 <h2 class="card-title">Log In</h2>
 
 <section class="card-body">
-<form method="post">
+<form method="post" class="flex gap-2">
   {% csrf_token %}
   {% for field in form %}
   <label class="indicator input input-bordered flex items-center gap-2">

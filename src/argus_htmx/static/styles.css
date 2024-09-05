@@ -3567,6 +3567,10 @@ input.tab:checked + .tab-content,
   margin: 1rem;
 }
 
+.m-8 {
+  margin: 2rem;
+}
+
 .my-0 {
   margin-top: 0px;
   margin-bottom: 0px;

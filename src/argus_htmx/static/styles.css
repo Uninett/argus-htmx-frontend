@@ -3779,6 +3779,10 @@ input.tab:checked + .tab-content,
   background-color: var(--fallback-n,oklch(var(--n)/var(--tw-bg-opacity)));
 }
 
+.fill-accent {
+  fill: var(--fallback-a,oklch(var(--a)/1));
+}
+
 .object-scale-down {
   -o-object-fit: scale-down;
      object-fit: scale-down;

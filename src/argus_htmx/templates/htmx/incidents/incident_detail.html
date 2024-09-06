@@ -117,7 +117,7 @@
 <h2 class="card-title">Related events</h2>
 <div class="divide-y divide-solid">
 {% for event in incident.events.all %}
-{% if not event.ack %}
+{% if event.type != "ACK"  %}
 <div class="card-body flex-none">
 <p>
 {{ event.get_type_display }}

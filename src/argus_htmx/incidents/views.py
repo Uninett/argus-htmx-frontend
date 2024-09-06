@@ -4,6 +4,7 @@ import logging
 from typing import Optional
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.contrib import messages
@@ -17,11 +18,12 @@ from django.http import HttpRequest, HttpResponse
 from django_htmx.middleware import HtmxDetails
 
 from argus.incident.models import Incident
+from argus.incident.ticket.utils import get_autocreate_ticket_plugin, serialize_incident_for_ticket_autocreation
 from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
-from .forms import AckForm, DescriptionOptionalForm
+from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
 
 
 User = get_user_model()
@@ -60,11 +62,17 @@ def incident_detail(request, pk: int):
         "ack": reverse("htmx:incident-detail-add-ack", kwargs={"pk": pk}),
         "close": reverse("htmx:incident-detail-close", kwargs={"pk": pk}),
         "reopen": reverse("htmx:incident-detail-reopen", kwargs={"pk": pk}),
+        "edit_ticket": reverse("htmx:incident-detail-edit-ticket", kwargs={"pk": pk}),
+        "add_ticket": reverse("htmx:incident-detail-add-ticket", kwargs={"pk": pk}),
     }
+    ticket_autocreation = bool(getattr(settings, "TICKET_PLUGIN", None))
+    if ticket_autocreation:
+        action_endpoints["autocreate_ticket"] = reverse("htmx:incident-detail-autocreate-ticket", kwargs={"pk": pk})
     context = {
         "incident": incident,
         "endpoints": action_endpoints,
         "page_title": str(incident),
+        "autocreate_ticket": ticket_autocreation,
     }
     return render(request, "htmx/incidents/incident_detail.html", context=context)
 
@@ -140,6 +148,44 @@ def incident_detail_reopen(request, pk: int):
             description=form.cleaned_data.get("description", ""),
         )
         LOG.info(f"{{ incident }} manually reopened by {{ request.user }}")
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_add_ticket(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = AddTicketUrlForm()
+    if request.POST:
+        form = AddTicketUrlForm(request.POST)
+        if form.is_valid():
+            incident.ticket_url = form.cleaned_data["ticket_url"]
+            incident.save()
+
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_edit_ticket(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = EditTicketUrlForm()
+    if request.POST:
+        form = EditTicketUrlForm(request.POST)
+        if form.is_valid():
+            incident.ticket_url = form.cleaned_data["ticket_url"]
+            incident.save()
+
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_autocreate_ticket(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    if request.POST:
+        ticket_plugin = get_autocreate_ticket_plugin()
+        serialized_incident = serialize_incident_for_ticket_autocreation(incident, request.user)
+        url = ticket_plugin.create_ticket(serialized_incident)
+        incident.change_ticket_url(request.user, url)
+
     return redirect("htmx:incident-detail", pk=pk)
 
 

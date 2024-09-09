@@ -18,5 +18,6 @@ src/argus_htmx/tailwindtheme/tailwindcss
 
 !.gitattributes
 !.gitignore
+!.git-blame-ignore-revs
 !.pre-commit-config.yaml
 !.github

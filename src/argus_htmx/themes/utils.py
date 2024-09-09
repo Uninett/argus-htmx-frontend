@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from argus_htmx import settings as argus_htmx_settings
 
 

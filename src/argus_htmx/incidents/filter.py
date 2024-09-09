@@ -4,7 +4,6 @@ from argus.filter import get_filter_backend
 from argus.incident.constants import Level
 from argus.incident.models import SourceSystem
 
-
 filter_backend = get_filter_backend()
 QuerySetFilter = filter_backend.QuerySetFilter
 

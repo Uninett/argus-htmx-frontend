@@ -1,15 +1,14 @@
 import logging
 
 from django.contrib import messages
-from django.shortcuts import render
-from django.views.generic import ListView
-
-from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.views.decorators.http import require_GET, require_POST
+from django.views.generic import ListView
 from django_htmx.http import HttpResponseClientRefresh
 
-from argus_htmx.themes.utils import get_theme_names
 from argus_htmx.incidents.views import HtmxHttpRequest
+from argus_htmx.themes.utils import get_theme_names
 
 LOG = logging.getLogger(__name__)
 THEMES_MODULE = 'argus_htmx'

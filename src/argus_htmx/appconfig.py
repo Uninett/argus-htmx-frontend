@@ -1,6 +1,5 @@
 from argus.site.settings._serializers import ListAppSetting
 
-
 __all__ = ["APP_SETTINGS"]
 
 _app_settings = [

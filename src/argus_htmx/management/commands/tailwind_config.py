@@ -1,11 +1,12 @@
 import pathlib
-from django.core.management.base import BaseCommand
-from django.conf import settings
-from django.template.context import make_context
-from django.template import Template
 
-from argus_htmx.themes.utils import get_themes
+from django.conf import settings
+from django.core.management.base import BaseCommand
+from django.template import Template
+from django.template.context import make_context
+
 from argus_htmx import settings as argus_htmx_settings
+from argus_htmx.themes.utils import get_themes
 
 
 # Copied from https://github.com/GEANT/geant-argus/pull/15 with minor modifications

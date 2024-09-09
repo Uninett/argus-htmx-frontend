@@ -1,29 +1,27 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 from datetime import datetime
+from typing import Optional
 
 from django.conf import settings
-from django.contrib.auth.models import Group
-from django.contrib.auth import get_user_model
 from django.contrib import messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
-
-from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.views.decorators.http import require_POST
 from django_htmx.middleware import HtmxDetails
 
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
+from .forms import AckForm, AddTicketUrlForm, DescriptionOptionalForm, EditTicketUrlForm
 from .utils import get_filter_function
-from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
-
 
 User = get_user_model()
 LOG = logging.getLogger(__name__)

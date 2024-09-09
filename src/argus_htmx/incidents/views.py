@@ -124,7 +124,7 @@ def incident_detail_close(request, pk: int):
             request.user,
             description=form.cleaned_data.get("description", ""),
         )
-        LOG.info(f"{{ incident }} manually closed by {{ request.user }}")
+        LOG.info(f"{ incident } manually closed by { request.user }")
     return redirect("htmx:incident-detail", pk=pk)
 
 
@@ -141,7 +141,7 @@ def incident_detail_reopen(request, pk: int):
             request.user,
             description=form.cleaned_data.get("description", ""),
         )
-        LOG.info(f"{{ incident }} manually reopened by {{ request.user }}")
+        LOG.info(f"{ incident } manually reopened by { request.user }")
     return redirect("htmx:incident-detail", pk=pk)
 
 

@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
-from django.utils.deprecation import MiddlewareMixin
 from django.utils.encoding import force_str
 
 

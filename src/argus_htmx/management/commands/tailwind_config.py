@@ -1,7 +1,6 @@
 import pathlib
 from django.core.management.base import BaseCommand
 from django.conf import settings
-from django.template import engines
 from django.template.context import make_context
 from django.template import Template
 

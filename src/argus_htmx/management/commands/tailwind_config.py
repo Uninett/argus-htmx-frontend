@@ -37,9 +37,7 @@ daisyUI theme list specified in the DAISYUI_THEMES setting (default: ["dark", "l
             self.stdout.write(f"{template_loc} is not a file")
             return
 
-        pathlib.Path(target_path).write_text(
-            self.render_config(template_path=template_path, context=context)
-        )
+        pathlib.Path(target_path).write_text(self.render_config(template_path=template_path, context=context))
 
         self.stdout.write(f"Wrote tailwind config to '{target_path}'")
 

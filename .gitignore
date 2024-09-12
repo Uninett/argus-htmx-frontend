@@ -19,3 +19,5 @@ src/argus_htmx/tailwindtheme/tailwindcss
 !.gitattributes
 !.gitignore
 !.pre-commit-config.yaml
+!.mega-linter.yml
+!.github

@@ -1,0 +1,12 @@
+# All available variables are described in documentation
+# https://megalinter.io/configuration/
+
+LINTER_RULES_PATH: .
+
+ENABLE_LINTERS:
+  - HTML_DJLINT
+
+# Make workflow fail even on non blocking errors
+FORMATTERS_DISABLE_ERRORS: false
+
+HTML_DJLINT_ARGUMENTS: "--lint --check"

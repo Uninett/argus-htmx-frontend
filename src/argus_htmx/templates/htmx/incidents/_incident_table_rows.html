@@ -2,10 +2,8 @@
     {% block incident %}
         {% include 'htmx/incidents/_incident_table_row.html' %}
     {% endblock incident %}
-    {% empty %}
+{% empty %}
     <tr>
-        <td colspan="{{ columns|length }}">
-            No incidents on this page.
-        </td>
+        <td colspan="{{ columns|length }}">No incidents on this page.</td>
     </tr>
 {% endfor %}

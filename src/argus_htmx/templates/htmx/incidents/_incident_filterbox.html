@@ -1,13 +1,11 @@
 {% load widget_tweaks %}
 <form>
-    <fieldset
-            hx-get="{% url 'htmx:incident-list' %}"
-            hx-include="this"
-            hx-trigger="change delay:100ms"
-            hx-target="#table"
-            hx-swap="outerHTML"
-            hx-push-url="true"
-    >
+    <fieldset hx-get="{% url 'htmx:incident-list' %}"
+              hx-include="this"
+              hx-trigger="change delay:100ms"
+              hx-target="#table"
+              hx-swap="outerHTML"
+              hx-push-url="true">
         <legend class="sr-only">Filter incidents</legend>
         <ul class="menu menu-horizontal menu-sm flex items-center gap-2 py-1.5">
             {% for field in filter_form %}
@@ -20,9 +18,7 @@
                             <div>
                                 {{ field|add_class:"range range-primary range-xs" }}
                                 <div class="flex w-full justify-between px-2 text-xs">
-                                    {% for tick in "12345" %}
-                                    <span>{{ tick }}</span>
-                                    {% endfor %}
+                                    {% for tick in "12345" %}<span>{{ tick }}</span>{% endfor %}
                                 </div>
                             </div>
                         {% elif field|field_type == "choicefield" %}
@@ -35,11 +31,8 @@
                     </label>
                 </li>
             {% empty %}
-                <li>
-                    No filter fields configured
-                </li>
+                <li>No filter fields configured</li>
             {% endfor %}
         </ul>
-
     </fieldset>
 </form>

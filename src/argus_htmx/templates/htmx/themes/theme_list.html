@@ -9,9 +9,10 @@
                hx-trigger="change"
                hx-swap="textContent"
                hx-target="#theme-badge"
-               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        />
+               hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' />
     </li>
 {% empty %}
-    <li><p>empty</p></li>
+    <li>
+        <p>empty</p>
+    </li>
 {% endfor %}

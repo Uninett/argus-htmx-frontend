@@ -13,3 +13,9 @@ repos:
         name: "Flake8: critical"
         args: ['--count', '--select=E9,F63,F7,F82', '--show-source', '--statistics']
         types: [file, python]
+
+-   repo: https://github.com/djlint/djLint
+    rev: v1.35.2
+    hooks:
+    -   id: djlint-reformat
+    -   id: djlint

@@ -5,8 +5,11 @@ LINTER_RULES_PATH: .
 
 ENABLE_LINTERS:
   - HTML_DJLINT
+  - CSS_STYLELINT
 
 # Make workflow fail even on non blocking errors
 FORMATTERS_DISABLE_ERRORS: false
 
 HTML_DJLINT_ARGUMENTS: "--lint --check"
+
+CSS_STYLELINT_CONFIG_FILE: stylelint.config.js

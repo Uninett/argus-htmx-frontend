@@ -1,0 +1,10 @@
+<section id="timeslot-{{ timeslot.pk  }}">
+<h2>{{ timeslot.name }}</h2>
+{% for time_recurrence in timeslot.time_recurrences.all %}
+
+<section id="time-recurrence-{{ time_recurrence.pk }}">
+{{ time_recurrence }}
+</section>
+
+{% endfor %}
+</section>

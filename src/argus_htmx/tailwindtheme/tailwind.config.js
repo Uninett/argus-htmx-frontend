@@ -1,5 +1,6 @@
 const projectPaths = [
     '../templates/**/*.html',
+    './**/templates/**/*.html',
 ];
 
 const contentPaths = [...projectPaths];

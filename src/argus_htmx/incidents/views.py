@@ -171,7 +171,6 @@ def incident_detail_edit_ticket(request, pk: int):
     return redirect("htmx:incident-detail", pk=pk)
 
 
-@require_GET
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     columns = get_incident_table_columns()
 

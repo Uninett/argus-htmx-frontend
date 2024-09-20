@@ -28,10 +28,8 @@ def dateformat_names(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 def change_dateformat(request: HtmxHttpRequest) -> HttpResponse:
     datetime_format_name = request.POST.get("dateformat", DATETIME_DEFAULT)
-    if datetime_format_name in DATETIME_FORMATS:
-        datetime_format = DATETIME_FORMATS[datetime_format_name]
-        request.session["datetime_format"] = datetime_format
-        request.session["datetime_format_name"] = datetime_format_name
-        messages.success(request, f'Switched dateformat to "{datetime_format_name}"')
-        return HttpResponse(f'{datetime_format_name}')
+    datetime_format = DATETIME_FORMATS[datetime_format_name]
+    request.session["datetime_format"] = datetime_format
+    request.session["datetime_format_name"] = datetime_format_name
+    messages.success(request, f'Switched dateformat to "{datetime_format_name}"')
     return HttpResponseClientRefresh()

@@ -6,6 +6,8 @@ Append the "context_processors" list for the TEMPLATES-backend
 
 See django settings for ``TEMPLATES``.
 """
+from .dateformat.constants import DATETIME_DEFAULT, DATETIME_FORMATS
+
 
 def theme_via_GET(request):
     # Move to theme-app?
@@ -20,8 +22,11 @@ def theme_via_session(request):
 
 
 def datetime_format_via_session(request):
-    datetime_format = request.session.get("datetime_format", "DATETIME_FORMAT")  # fallback to locale
     datetime_format_name = request.session.get("datetime_format_name", "LOCALE")  # fallback to locale
+    if datetime_format_name not in DATETIME_FORMATS.values():
+        datetime_format_name = DATETIME_DEFAULT
+    # The named format always wins
+    datetime_format = DATETIME_FORMATS[datetime_format_name]
     return {
         "datetime_format": datetime_format,
         "datetime_format_name": datetime_format_name,

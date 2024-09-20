@@ -8,15 +8,9 @@ from django.http import HttpResponse
 from django_htmx.http import HttpResponseClientRefresh
 
 from argus_htmx.incidents.views import HtmxHttpRequest
+from .constants import DATETIME_DEFAULT, DATETIME_FORMATS
 
 LOG = logging.getLogger(__name__)
-DATETIME_DEFAULT = 'LOCALE'
-DATETIME_FORMATS = {
-    'LOCALE': 'DATETIME_FORMAT',  # default
-    'ISO': 'Y-m-d H:i:s',
-    'RFC5322': 'r',
-    'EPOCH': 'U',
-}
 
 
 @require_GET
@@ -28,7 +22,8 @@ def dateformat_names(request: HtmxHttpRequest) -> HttpResponse:
 @require_POST
 def change_dateformat(request: HtmxHttpRequest) -> HttpResponse:
     datetime_format_name = request.POST.get("dateformat", DATETIME_DEFAULT)
-    datetime_format = DATETIME_FORMATS[datetime_format_name]
+    default_format = DATETIME_FORMATS[DATETIME_DEFAULT]
+    datetime_format = DATETIME_FORMATS.get(datetime_format_name, default_format)
     request.session["datetime_format"] = datetime_format
     request.session["datetime_format_name"] = datetime_format_name
     messages.success(request, f'Switched dateformat to "{datetime_format_name}"')

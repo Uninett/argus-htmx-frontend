@@ -218,7 +218,7 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "base": base_template,
         "page": page,
         "last_refreshed": last_refreshed,
-        "update_interval": 3000,
+        "update_interval": 30,
         "page_size": page_size,
         "all_page_sizes": ALLOWED_PAGE_SIZES
     }

@@ -1,3 +1,4 @@
+@import "./extras.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

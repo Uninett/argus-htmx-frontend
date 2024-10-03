@@ -16,8 +16,8 @@ INCIDENT_TABLE_COLUMNS = [
 ]
 
 # Tailwind config template relative to the repository root directory
-TAILWIND_CONFIG_TEMPLATE = "src/argus_htmx/tailwindtheme/tailwind.config.template.js"
-TAILWIND_CONFIG_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
+TAILWIND_CONFIG_TEMPLATE = "tailwind/tailwind.config.js"
+# TAILWIND_CONFIG_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
 
 DEFAULT_THEMES = ["dark", "light", {
     "argus": {
@@ -45,4 +45,8 @@ DEFAULT_THEMES = ["dark", "light", {
 }]
 DAISYUI_THEMES = get_json_env("DAISYUI_THEMES", DEFAULT_THEMES, quiet=True)
 DEFAULT_THEME_OVERRIDE = {}
-TAILWIND_THEME_OVERRIDE = get_json_env("TAILWIND_THEME_OVERRIDE", DEFAULT_THEME_OVERRIDE, quiet=True)
+TAILWIND_THEME_OVERRIDE = get_json_env(
+    "TAILWIND_THEME_OVERRIDE", DEFAULT_THEME_OVERRIDE, quiet=True
+)
+TAILWIND_CONFIG_TARGET = 'src/argus_htmx/tailwindtheme/tailwind.config.js'
+TAILWIND_CSS_TARGET = 'src/argus_htmx/tailwindtheme/styles.css'

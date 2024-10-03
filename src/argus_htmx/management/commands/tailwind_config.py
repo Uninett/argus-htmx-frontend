@@ -29,7 +29,7 @@ This command also generates a `styles.css` that contains the base css file for t
 its final css file. It uses the template specified by the `TAILWIND_CSS_TEMPLATE` setting (default:
 tailwind/styles.css). This file should also be in an app's templates directory
 
-The `styles.css` template may iterate over `cssfiles` context variable that contains css
+The `styles.css` template may iterate over a `cssfiles` context variable that contains css
 files/snippets that should be included in the final css file. Apps may define a
 `tailwind_css_files` method that gives the location (as a str or pathlib.Path object) for every
 css file from this app to include. (see argus_htmx.apps.HtmxFrontendConfig for an example)
@@ -39,23 +39,21 @@ Additional settings that govern the functionality of this command are:
  * TAILWIND_CSS_TARGET: override the base tailwind css file location (default: styles.css)
 
 """
-    DEFAULT_CONFIG_TEMPLATE_PATH = "tailwind/tailwind.config.js"
-    DEFAULT_CSS_TEMPLATE_PATH = "tailwind/styles.css"
+    DEFAULT_CONFIG_TEMPLATE_NAME = "tailwind/tailwind.config.js"
+    DEFAULT_CSS_TEMPLATE_NAME = "tailwind/styles.css"
 
-    # DEFAULT_CONFIG_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
-    # DEFAULT_CSS_TARGET = "src/argus_htmx/tailwindtheme/styles.css"
-    DEFAULT_CONFIG_TARGET = "tailwind.config.js"
-    DEFAULT_CSS_TARGET = "styles.css"
+    DEFAULT_CONFIG_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
+    DEFAULT_CSS_TARGET = "src/argus_htmx/tailwindtheme/styles.css"
 
     def handle(self, *args, **options):
         config_template_name = getattr(
-            settings, "TAILWIND_CONFIG_TEMPLATE", self.DEFAULT_CONFIG_TEMPLATE_PATH
+            settings, "TAILWIND_CONFIG_TEMPLATE", self.DEFAULT_CONFIG_TEMPLATE_NAME
         )
         config_target_path = pathlib.Path(
             getattr(settings, "TAILWIND_CONFIG_TARGET", self.DEFAULT_CONFIG_TARGET)
         )
         css_template_name = getattr(
-            settings, "TAILWIND_CSS_TEMPLATE", self.DEFAULT_CSS_TEMPLATE_PATH
+            settings, "TAILWIND_CSS_TEMPLATE", self.DEFAULT_CSS_TEMPLATE_NAME
         )
         css_target_path = pathlib.Path(
             getattr(settings, "TAILWIND_CSS_TARGET", self.DEFAULT_CSS_TARGET)

@@ -17,7 +17,9 @@ INCIDENT_TABLE_COLUMNS = [
 
 # Tailwind config template relative to the repository root directory
 TAILWIND_CONFIG_TEMPLATE = "tailwind/tailwind.config.js"
-# TAILWIND_CONFIG_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
+TAILWIND_CSS_TEMPLATE = "tailwind/styles.css"
+TAILWIND_CONFIG_TARGET = 'src/argus_htmx/tailwindtheme/tailwind.config.js'
+TAILWIND_CSS_TARGET = 'src/argus_htmx/tailwindtheme/styles.css'
 
 DEFAULT_THEMES = ["dark", "light", {
     "argus": {
@@ -48,5 +50,3 @@ DEFAULT_THEME_OVERRIDE = {}
 TAILWIND_THEME_OVERRIDE = get_json_env(
     "TAILWIND_THEME_OVERRIDE", DEFAULT_THEME_OVERRIDE, quiet=True
 )
-TAILWIND_CONFIG_TARGET = 'src/argus_htmx/tailwindtheme/tailwind.config.js'
-TAILWIND_CSS_TARGET = 'src/argus_htmx/tailwindtheme/styles.css'

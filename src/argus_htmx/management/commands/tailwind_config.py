@@ -1,5 +1,7 @@
 import inspect
+import json
 import pathlib
+import textwrap
 from django.apps import apps
 from django.core.management.base import BaseCommand
 from django.conf import settings
@@ -78,14 +80,15 @@ Additional settings that govern the functionality of this command are:
                 "TAILWIND_THEME_OVERRIDE",
                 argus_htmx_settings.TAILWIND_THEME_OVERRIDE,
             ),
-            "daisyuithemes": get_themes(),
+            "daisyuithemes": textwrap.indent(
+                json.dumps(get_themes(), indent=2),
+                prefix=10 * " ",
+                predicate=lambda line: line != "[\n", # this is kinda hacky, but eh
+            ),
             "projectpaths": "\n".join(
                 f"        '{d}/**/*.html'," for d in self.get_template_dirs()
             ),
-            "cssfiles": (
-                self.make_relative(p, target_dir)
-                for p in sorted(self.get_css_files(), key=lambda p: p.stem)
-            ),
+            "cssfiles": self.get_css_files(target_dir),
         }
 
     def write_template(self, template_name, target_path, context, name):
@@ -105,8 +108,13 @@ Additional settings that govern the functionality of this command are:
         for engine in engines.all():
             yield from getattr(engine, "template_dirs", [])
 
+    @classmethod
+    def get_css_files(cls, target_dir: pathlib.Path):
+        css_files = sorted(cls._iter_css_files(), key=lambda p: p.stem)
+        return (cls.make_relative(p, target_dir) for p in css_files)
+
     @staticmethod
-    def get_css_files():
+    def _iter_css_files():
         for app in apps.get_app_configs():
             if callable(css_files := getattr(app, "tailwind_css_files", None)):
                 yield from (pathlib.Path(p) for p in css_files())

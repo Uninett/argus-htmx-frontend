@@ -23,7 +23,9 @@ _app_settings = [
             "django_htmx.middleware.HtmxMiddleware": "end",
         },
     },
-    {"app_name": "widget_tweaks"},
+    {
+        "app_name": "widget_tweaks",  # indent for readability
+    },
 ]
 
 APP_SETTINGS = ListAppSetting(_app_settings).root

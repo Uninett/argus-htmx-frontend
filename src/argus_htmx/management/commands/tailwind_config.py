@@ -11,16 +11,19 @@ from argus_htmx.themes.utils import get_themes
 
 # Copied from https://github.com/GEANT/geant-argus/pull/15 with minor modifications
 class Command(BaseCommand):
-    help = """\
-    
-Uses the 
-template specified in the TAILWIND_CONFIG_TEMPLATE setting (default: tailwind.config.js)
-to dynamically build a tailwind.config.js. The template should contain:
- - a'{{ daisyuithemes }}' section without square brackets that will be popuplated by the 
-daisyUI theme list specified in the DAISYUI_THEMES setting (default: ["dark", "light", {"argus"": {...}} ])
- - a '{{ themeoverride }}' section that will be popuplated by a dict containing tailwind theme options 
- specified in TAILWIND_THEME_OVERRIDE setting (default: {})
-"""
+    help = """
+    Uses the template specified in the TAILWIND_CONFIG_TEMPLATE setting
+    (default: tailwind.config.js) to dynamically build a tailwind.config.js.
+    The template should contain:
+
+    - a "{{ daisyuithemes }}" section without square brackets that will be
+      popuplated by the daisyUI theme list specified in the DAISYUI_THEMES
+      setting (default: ["dark", "light", {"argus"": {...}} ])
+
+    - a "{{ themeoverride }}" section that will be popuplated by a dict
+      containing tailwind theme options specified in TAILWIND_THEME_OVERRIDE
+      setting (default: {})
+    """
     DEFAULT_TEMPLATE_PATH = "src/argus_htmx/tailwindtheme/tailwind.config.template.js"
     DEFAULT_TARGET = "src/argus_htmx/tailwindtheme/tailwind.config.js"
 

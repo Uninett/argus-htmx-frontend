@@ -1,4 +1,3 @@
-import inspect
 import json
 import pathlib
 import textwrap
@@ -8,7 +7,6 @@ from django.conf import settings
 from django.template import engines
 from django.template.context import make_context
 from django.template.loader import get_template
-from django.template import Template
 
 from argus_htmx.themes.utils import get_themes
 from argus_htmx import settings as argus_htmx_settings

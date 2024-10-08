@@ -18,6 +18,7 @@ class Command(BaseCommand):
 Uses the template specified in the TAILWIND_CONFIG_TEMPLATE setting (default: tailwind/tailwind.config.js)
 to dynamically build a tailwind.config.js. This file must be in an app's templates directory. The
 template may contain:
+
  - a '{{ projectpaths }} section without square brackets that will be popuplated with auto discovered
  template dirs of installed apps
  - a '{{ daisyuithemes }}' section without square brackets that will be popuplated by the
@@ -35,8 +36,11 @@ files/snippets that should be included in the final css file. Apps may define a
 css file from this app to include. (see argus_htmx.apps.HtmxFrontendConfig for an example)
 
 Additional settings that govern the functionality of this command are:
- * TAILWIND_CONFIG_TARGET: the target location for writing the tailwind.config.js
- * TAILWIND_CSS_TARGET: override the base tailwind css file location (default: styles.css)
+
+ - TAILWIND_CONFIG_TARGET: the target location for writing the tailwind.config.js
+ - TAILWIND_CSS_TARGET: override the base tailwind css file location
+
+These target locations are relative to the working directory where this command is executed
 
 """
     DEFAULT_CONFIG_TEMPLATE_NAME = "tailwind/tailwind.config.js"
@@ -58,13 +62,13 @@ Additional settings that govern the functionality of this command are:
         css_target_path = pathlib.Path(
             getattr(settings, "TAILWIND_CSS_TARGET", self.DEFAULT_CSS_TARGET)
         )
-        self.write_template(
+        self.write_file(
             config_template_name,
             config_target_path,
             context=self.get_context(target_dir=config_target_path.parent),
             name="tailwind config",
         )
-        self.write_template(
+        self.write_file(
             css_template_name,
             css_target_path,
             context=self.get_context(target_dir=css_target_path.parent),
@@ -89,15 +93,15 @@ Additional settings that govern the functionality of this command are:
             "cssfiles": self.get_css_files(target_dir),
         }
 
-    def write_template(self, template_name, target_path, context, name):
+    def write_file(self, template_name, target_path, context, name):
         pathlib.Path(target_path).write_text(
-            self.render_file(template_name=template_name, context=context)
+            self.render(template_name=template_name, context=context)
         )
 
         self.stdout.write(f"Wrote {name} to '{target_path}'")
 
     @staticmethod
-    def render_file(template_name: str, context):
+    def render(template_name: str, context):
         template = get_template(template_name)
         return template.template.render(make_context(context, autoescape=False))
 

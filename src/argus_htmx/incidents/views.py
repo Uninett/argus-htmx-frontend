@@ -16,6 +16,7 @@ from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
 from django_htmx.middleware import HtmxDetails
+from django_htmx.http import HttpResponseClientRefresh
 
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
@@ -108,6 +109,16 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
     formdata = request.POST or None
     _incident_add_ack(pk, formdata, request.user, group)
     return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incidents_bulk_ack(request, group: Optional[str] = None):
+    formdata = request.POST or None
+    pks = request.POST.getlist("selected_incidents", [])
+    # XXX This is ineffective, WIP solution while waiting for proper helpers implementation
+    for incident_id in pks:
+        _incident_add_ack(incident_id, formdata, request.user, group)
+    return HttpResponseClientRefresh()
 
 
 @require_POST

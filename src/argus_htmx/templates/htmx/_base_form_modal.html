@@ -7,8 +7,13 @@
     <div class="modal-box card card-compact shadow-xl">
         <div class="divider divider-start"><h3 class="card-title">{{ header }}</h3></div>
         <form id="{{ dialog_id }}-form" class="card-body"
+                {% if action_type == "bulk-update" %}
               hx-post="{% url endpoint|default:'htmx:incident-list' %}"
               hx-include="[name='selected_incidents']"
+                {% else %}
+              method="post"
+              action="{{ endpoint }}"
+                {% endif %}
         >
             {% csrf_token %}
             <fieldset class="menu menu-vertical gap-4">

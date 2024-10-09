@@ -7,7 +7,8 @@
     <h2 class="card-title">Log In</h2>
 
     <section class="card-body">
-    <form method="post" class="flex flex-col gap-6">
+    {% if "username_password" in backends %}
+    <form method="post" class="flex flex-col gap-6" action"{{ backends.username_password.url }}">
       {% csrf_token %}
       {% for field in form %}
       <label class="flex flex-row items-center gap-2">
@@ -18,8 +19,16 @@
         </div>
       </label>
       {% endfor %}
-      <button type="submit" class="btn btn-primary">Log In</button>
+      <button type="submit" class="btn btn-primary">{{ backends.username_password.button }}</button>
     </form>
+    {% endif %}
+
+    {% if backends.link %}
+    <h3>Login with</h3>
+    {% endif %}
+    {% for backend in backends.link %}
+      <a class="btn btn-primary" href="{{ backend.url }}">{{ backend.button }}</a>
+    {% endfor %}
     </section>
 
 </div>

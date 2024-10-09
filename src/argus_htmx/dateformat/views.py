@@ -1,13 +1,13 @@
 import logging
 
 from django.contrib import messages
-from django.shortcuts import render
-
-from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse
+from django.shortcuts import render
+from django.views.decorators.http import require_GET, require_POST
 from django_htmx.http import HttpResponseClientRefresh
 
 from argus_htmx.incidents.views import HtmxHttpRequest
+
 from .constants import DATETIME_DEFAULT, DATETIME_FORMATS
 
 LOG = logging.getLogger(__name__)

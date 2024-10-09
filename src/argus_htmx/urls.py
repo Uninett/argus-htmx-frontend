@@ -1,15 +1,14 @@
-from django.urls import path, include
 from django.contrib.auth import views as auth_views
+from django.urls import include, path
 
 from argus.auth.utils import get_psa_authentication_names
-from argus.auth.views import LogoutView
 
-from .incidents.urls import urlpatterns as incident_urls
-from .timeslots.urls import urlpatterns as timeslot_urls
-from .notificationprofiles.urls import urlpatterns as notificationprofile_urls
-from .destinations.urls import urlpatterns as destination_urls
-from .themes.urls import urlpatterns as theme_urls
 from .dateformat.urls import urlpatterns as dateformat_urls
+from .destinations.urls import urlpatterns as destination_urls
+from .incidents.urls import urlpatterns as incident_urls
+from .notificationprofiles.urls import urlpatterns as notificationprofile_urls
+from .themes.urls import urlpatterns as theme_urls
+from .timeslots.urls import urlpatterns as timeslot_urls
 
 app_name = "htmx"
 urlpatterns = [

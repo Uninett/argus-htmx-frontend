@@ -39,4 +39,8 @@ name = "argus_htmx"
 line-length = 120
 
 [tool.ruff.lint]
+extend-select = ["I"]
 ignore = ["E731"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["argus"]

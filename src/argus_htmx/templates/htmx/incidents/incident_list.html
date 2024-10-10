@@ -10,12 +10,14 @@
             {% include "htmx/incidents/_incidents_menubar.html" %}
         {% endif %}
     </section>
-    <section id="incident-list" class="loading-box">
-        {% block table %}
-            {% include "htmx/incidents/_incident_table.html" %}
-        {% endblock table %}
-        <div class="htmx-indicator loading-overlay bg-base-100/70">
-            <div class="loading loading-spinner loading-lg text-primary"></div>
+    <section id="incident-list">
+        <div class="loading-box">
+            {% block table %}
+                {% include "htmx/incidents/_incident_table.html" %}
+            {% endblock table %}
+            <div class="htmx-indicator loading-overlay bg-base-100/70">
+                <div class="loading loading-spinner loading-lg text-primary"></div>
+            </div>
         </div>
     </section>
 {% endblock main %}

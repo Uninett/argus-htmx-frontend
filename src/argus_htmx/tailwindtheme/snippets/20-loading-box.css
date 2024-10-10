@@ -4,6 +4,15 @@
       width: 100%;
       place-items: center;
     }
+    /*
+     * This rule ensures that all direct child elements of .loading-box
+     * are placed in the first column and the first row of the grid,
+     * effectively stacking them on top of each other.
+     */
+    .loading-box > * {
+      grid-column-start: 1;
+      grid-row-start: 1;
+    }
     .loading-box .loading-overlay {
       position: absolute;
     }

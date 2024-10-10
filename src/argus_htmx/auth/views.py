@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.views import LoginView as DjangoLoginView
 from django.urls import reverse
 
@@ -7,6 +8,9 @@ from argus.auth.utils import (
     get_psa_authentication_backends,
     get_authentication_backend_classes,
 )
+
+
+REMOTE_USER_METHOD_NAME = getattr(settings, "ARGUS_REMOTE_USER_METHOD_NAME", "REMOTE_USER")
 
 
 def get_htmx_authentication_backend_name_and_type():
@@ -23,7 +27,7 @@ def get_htmx_authentication_backend_name_and_type():
     if has_remote_user_backend(backends):
         remote_user_data = {
             "url": "/",
-            "button": "REMOTE USER",  # needs to be setting
+            "button": REMOTE_USER_METHOD_NAME,
         }
         data.setdefault("link", []).append(remote_user_data)
 

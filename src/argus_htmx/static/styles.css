@@ -3578,26 +3578,16 @@ input.tab:checked + .tab-content,
   place-items: center;
 }
 
-/*
-     * This rule ensures that all direct child elements of .loading-box
-     * are placed in the first column and the first row of the grid,
-     * effectively stacking them on top of each other.
-     */
+/* Stacks direct children on top of each other */
 
 .loading-box > * {
   grid-column-start: 1;
   grid-row-start: 1;
 }
 
-/*
-    * This rule applies styles to all direct child elements of .loading-box
-    * that are not .htmx-indicator
-    * only if there is a direct child element with both the .htmx-indicator
-    * and .htmx-request classes simultaneously.
-    */
+/* Adds overlay */
 
 .loading-box:has(> .htmx-indicator.htmx-request) > *:not(.htmx-indicator) {
-  /* Disables mouse interactions with the child elements */
   pointer-events: none;
   opacity: 0.3;
 }

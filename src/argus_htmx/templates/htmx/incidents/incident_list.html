@@ -10,7 +10,7 @@
             {% include "htmx/incidents/_incidents_menubar.html" %}
         {% endif %}
     </section>
-    <section id="incident-list" class="loading-box">
+    <section id="incident-list" class="loading-box overflow-x-auto">
         {% block table %}
             {% include "htmx/incidents/_incident_table.html" %}
         {% endblock table %}

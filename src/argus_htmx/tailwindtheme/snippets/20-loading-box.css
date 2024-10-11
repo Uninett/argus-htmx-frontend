@@ -31,6 +31,6 @@
     .loading-box:has(> .htmx-indicator.htmx-request) > *:not(.htmx-indicator) {
       /* Disables mouse interactions with the child elements */
       pointer-events: none;
-      @apply opacity-50;
+      opacity: 0.3;
     }
   }

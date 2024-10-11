@@ -53,11 +53,14 @@ file) at minimum add::
         "django_htmx.middleware.HtmxMiddleware",
         "argus_htmx.middleware.LoginRequiredMiddleware",
     ]
-    LOGIN_URL = "/accounts/login"
+    LOGIN_URL = "/accounts/login/"
     LOGIN_REDIRECT_URL = "/incidents/"
+    LOGIN_REDIRECT_URL = "/incidents/"
+    LOGOUT_REDIRECT_URL = "/"
     PUBLIC_URLS = [
         "/accounts/login/",
         "/api/",
+        "/oidc/",
     ]
     TEMPLATES = [
         {

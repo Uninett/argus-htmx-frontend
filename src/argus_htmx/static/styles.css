@@ -3588,8 +3588,16 @@ input.tab:checked + .tab-content,
 /* Adds overlay */
 
 .loading-box:has(> .htmx-indicator.htmx-request) > *:not(.htmx-indicator) {
-  pointer-events: none;
   opacity: 0.3;
+}
+
+/* Disables mouse interactions */
+
+.loading-box:has(> .htmx-indicator.htmx-request) * {
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .sr-only {

@@ -71,7 +71,7 @@ def bulk_change_incidents(actor, incident_ids: List[int], data: Dict[str, Any], 
 
     Applies ``func`` to the incidents in ``incident_ids`` with the
     pre-validated bulk-type dependent key-value pairs in ``data``. Blames it on
-    the user ``actor``.
+    the user ``actor``. Adds ``timestamp`` to ``data`` if it is not already present.
 
     Returns a queryset of the changed incidents and a list of incident ids that
     could not be changed due to for instance

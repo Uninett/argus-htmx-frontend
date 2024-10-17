@@ -14,7 +14,5 @@ urlpatterns = [
     path("<int:pk>/ticket-edit-detail/", views.incident_detail_edit_ticket, name="incident-detail-edit-ticket"),
     path("<int:pk>/ticket-add-detail/", views.incident_detail_add_ticket, name="incident-detail-add-ticket"),
     path("bulk/ack/", views.incidents_bulk_ack, name="incidents-bulk-ack"),
-    path("bulk/close/", views.incidents_bulk_close, name="incidents-bulk-close"),
-    path("bulk/reopen/", views.incidents_bulk_reopen, name="incidents-bulk-reopen"),
-    path("bulk/ticket-update/", views.incidents_bulk_update_ticket, name="incidents-bulk-update-ticket"),
+    path("update/", views.incidents_update, name="incidents-update"),
 ]

@@ -33,6 +33,14 @@ LOG = logging.getLogger(__name__)
 DEFAULT_PAGE_SIZE = getattr(settings, "ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE", 10)
 ALLOWED_PAGE_SIZES = getattr(settings, "ARGUS_INCIDENTS_PAGE_SIZES", [10, 20, 50, 100])
 
+# Map Hx-Trigger to parameters for incidents update
+INCIDENT_UPDATE_FORMS = {
+    "create-acknowledgment-dialog-form": (AckForm, bulk_ack_queryset),
+    "close_incident-dialog-form": (DescriptionOptionalForm, bulk_close_queryset),
+    "reopen-incident-dialog": (DescriptionOptionalForm, bulk_reopen_queryset),
+    "add-ticket-dialog-form": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
+}
+
 
 def prefetch_incident_daughters():
     return Incident.objects.select_related("source").prefetch_related(
@@ -135,35 +143,18 @@ def get_form_data(request, formclass: forms.Form):
 
 @require_POST
 def incidents_bulk_ack(request, group: Optional[str] = None):
-    formdata, incident_ids = get_form_data(request, AckForm)
     if group:
         user_is_group_member(request.user, group)
-    if formdata:
-        bulk_change_incidents(request.user, incident_ids, formdata, bulk_ack_queryset)
-    return HttpResponseClientRefresh()
+    return incidents_update(request)
 
 
 @require_POST
-def incidents_bulk_close(request):
-    formdata, incident_ids = get_form_data(request, DescriptionOptionalForm)
+def incidents_update(request: HtmxHttpRequest):
+    form_id = request.headers.get("Hx-Trigger")
+    formclass, queryset = INCIDENT_UPDATE_FORMS.get(form_id, (None, None))
+    formdata, incident_ids = get_form_data(request, formclass)
     if formdata:
-        bulk_change_incidents(request.user, incident_ids, formdata, bulk_close_queryset)
-    return HttpResponseClientRefresh()
-
-
-@require_POST
-def incidents_bulk_reopen(request):
-    formdata, incident_ids = get_form_data(request, DescriptionOptionalForm)
-    if formdata:
-        bulk_change_incidents(request.user, incident_ids, formdata, bulk_reopen_queryset)
-    return HttpResponseClientRefresh()
-
-
-@require_POST
-def incidents_bulk_update_ticket(request):
-    formdata, incident_ids = get_form_data(request, EditTicketUrlForm)
-    if formdata:
-        bulk_change_incidents(request.user, incident_ids, formdata, bulk_change_ticket_url_queryset)
+        bulk_change_incidents(request.user, incident_ids, formdata, queryset)
     return HttpResponseClientRefresh()
 
 

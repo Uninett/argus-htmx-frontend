@@ -121,14 +121,6 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
     return redirect("htmx:incident-detail", pk=pk)
 
 
-def user_is_group_member(user: User, group_name: str):
-    group = get_object_or_404(Group, name=group_name)
-    is_group_member = user.groups.filter(pk=group.pk).exists()
-    if group and not is_group_member:
-        raise PermissionDenied("User {request.user} is not a member of the correct group")
-    return is_group_member
-
-
 def get_form_data(request, formclass: forms.Form):
     formdata = request.POST or None
     incident_ids = []
@@ -139,13 +131,6 @@ def get_form_data(request, formclass: forms.Form):
         if form.is_valid():
             cleaned_form = form.cleaned_data
     return cleaned_form, incident_ids
-
-
-@require_POST
-def incidents_bulk_ack(request, group: Optional[str] = None):
-    if group:
-        user_is_group_member(request.user, group)
-    return incidents_update(request)
 
 
 @require_POST

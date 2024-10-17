@@ -33,12 +33,12 @@ LOG = logging.getLogger(__name__)
 DEFAULT_PAGE_SIZE = getattr(settings, "ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE", 10)
 ALLOWED_PAGE_SIZES = getattr(settings, "ARGUS_INCIDENTS_PAGE_SIZES", [10, 20, 50, 100])
 
-# Map Hx-Trigger to parameters for incidents update
-INCIDENT_UPDATE_FORMS = {
-    "create-acknowledgment-dialog-form": (AckForm, bulk_ack_queryset),
-    "close_incident-dialog-form": (DescriptionOptionalForm, bulk_close_queryset),
-    "reopen-incident-dialog": (DescriptionOptionalForm, bulk_reopen_queryset),
-    "add-ticket-dialog-form": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
+# Map request trigger to parameters for incidents update
+INCIDENT_UPDATE_FORM_NAMES = {
+    "ack": (AckForm, bulk_ack_queryset),
+    "close": (DescriptionOptionalForm, bulk_close_queryset),
+    "reopen": (DescriptionOptionalForm, bulk_reopen_queryset),
+    "update-ticket": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
 }
 
 
@@ -150,8 +150,8 @@ def incidents_bulk_ack(request, group: Optional[str] = None):
 
 @require_POST
 def incidents_update(request: HtmxHttpRequest):
-    form_id = request.headers.get("Hx-Trigger")
-    formclass, queryset = INCIDENT_UPDATE_FORMS.get(form_id, (None, None))
+    form_id = request.htmx.trigger_name or request.htmx.trigger
+    formclass, queryset = INCIDENT_UPDATE_FORM_NAMES.get(form_id, (None, None))
     formdata, incident_ids = get_form_data(request, formclass)
     if formdata:
         bulk_change_incidents(request.user, incident_ids, formdata, queryset)

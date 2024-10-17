@@ -6,7 +6,7 @@
 <dialog id="{{ dialog_id }}" class="modal">
     <div class="modal-box card card-compact shadow-xl">
         <div class="divider divider-start"><h3 class="card-title">{{ header }}</h3></div>
-        <form id="{{ dialog_id }}-form" class="card-body"
+        <form id="{{ dialog_id }}-form" class="card-body" name="{{ form_name|default:dialog_id }}"
             {% block form_control %}
               method="post" action="{{ endpoint }}"
             {% endblock form_control %}

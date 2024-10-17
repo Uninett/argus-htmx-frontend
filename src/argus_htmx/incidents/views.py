@@ -4,6 +4,7 @@ import logging
 from typing import Optional
 from datetime import datetime
 
+from django import forms
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
@@ -109,6 +110,26 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
     formdata = request.POST or None
     _incident_add_ack(pk, formdata, request.user, group)
     return redirect("htmx:incident-detail", pk=pk)
+
+
+def user_is_group_member(user: User, group_name: str):
+    group = get_object_or_404(Group, name=group_name)
+    is_group_member = user.groups.filter(pk=group.pk).exists()
+    if group and not is_group_member:
+        raise PermissionDenied("User {request.user} is not a member of the correct group")
+    return is_group_member
+
+
+def get_form_data(request, formclass: forms.Form):
+    formdata = request.POST or None
+    incident_ids = []
+    cleaned_form = None
+    if formdata:
+        incident_ids = request.POST.getlist("selected_incidents", [])
+        form = formclass(formdata)
+        if form.is_valid():
+            cleaned_form = form.cleaned_data
+    return cleaned_form, incident_ids
 
 
 @require_POST

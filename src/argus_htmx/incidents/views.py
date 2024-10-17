@@ -25,7 +25,8 @@ from argus.util.datetime_utils import make_aware
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
 from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
-
+from ..utils import bulk_change_incidents, bulk_ack_queryset, bulk_close_queryset, bulk_reopen_queryset, \
+    bulk_change_ticket_url_queryset
 
 User = get_user_model()
 LOG = logging.getLogger(__name__)
@@ -134,11 +135,35 @@ def get_form_data(request, formclass: forms.Form):
 
 @require_POST
 def incidents_bulk_ack(request, group: Optional[str] = None):
-    formdata = request.POST or None
-    pks = request.POST.getlist("selected_incidents", [])
-    # XXX This is ineffective, WIP solution while waiting for proper helpers implementation
-    for incident_id in pks:
-        _incident_add_ack(incident_id, formdata, request.user, group)
+    formdata, incident_ids = get_form_data(request, AckForm)
+    if group:
+        user_is_group_member(request.user, group)
+    if formdata:
+        bulk_change_incidents(request.user, incident_ids, formdata, bulk_ack_queryset)
+    return HttpResponseClientRefresh()
+
+
+@require_POST
+def incidents_bulk_close(request):
+    formdata, incident_ids = get_form_data(request, DescriptionOptionalForm)
+    if formdata:
+        bulk_change_incidents(request.user, incident_ids, formdata, bulk_close_queryset)
+    return HttpResponseClientRefresh()
+
+
+@require_POST
+def incidents_bulk_reopen(request):
+    formdata, incident_ids = get_form_data(request, DescriptionOptionalForm)
+    if formdata:
+        bulk_change_incidents(request.user, incident_ids, formdata, bulk_reopen_queryset)
+    return HttpResponseClientRefresh()
+
+
+@require_POST
+def incidents_bulk_update_ticket(request):
+    formdata, incident_ids = get_form_data(request, EditTicketUrlForm)
+    if formdata:
+        bulk_change_incidents(request.user, incident_ids, formdata, bulk_change_ticket_url_queryset)
     return HttpResponseClientRefresh()
 
 

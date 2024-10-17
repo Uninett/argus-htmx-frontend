@@ -19,24 +19,24 @@ def get_htmx_authentication_backend_name_and_type():
 
     data = {}
     if has_model_backend(backends):
-        data["username_password"] = {
+        data["local"] = {
             "url": reverse("htmx:login"),
-            "button": "Log In",
+            "display_name": "Log In",
         }
 
     if has_remote_user_backend(backends):
         remote_user_data = {
-            "url": "/",
-            "button": REMOTE_USER_METHOD_NAME,
+            "url": "/",  # Should probably also be a setting
+            "display_name": REMOTE_USER_METHOD_NAME,
         }
-        data.setdefault("link", []).append(remote_user_data)
+        data.setdefault("external", []).append(remote_user_data)
 
     for backend in get_psa_authentication_backends(backends):
         psa_backend_data = {
             "url": reverse("social:begin", kwargs={"backend": backend.name}),
-            "button": backend.name,
+            "display_name": backend.name,
         }
-        data.setdefault("link", []).append(psa_backend_data)
+        data.setdefault("external", []).append(psa_backend_data)
 
     return data
 

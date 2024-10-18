@@ -39,6 +39,7 @@ INCIDENT_UPDATE_FORM_NAMES = {
     "close": (DescriptionOptionalForm, bulk_close_queryset),
     "reopen": (DescriptionOptionalForm, bulk_reopen_queryset),
     "update-ticket": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
+    "add-ticket": (AddTicketUrlForm, bulk_change_ticket_url_queryset),
 }
 
 
@@ -66,141 +67,35 @@ def incident_row(request, pk: int):
 
 def incident_detail(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
-    action_endpoints = {
-        "ack": reverse("htmx:incident-detail-add-ack", kwargs={"pk": pk}),
-        "close": reverse("htmx:incident-detail-close", kwargs={"pk": pk}),
-        "reopen": reverse("htmx:incident-detail-reopen", kwargs={"pk": pk}),
-        "edit_ticket": reverse("htmx:incident-detail-edit-ticket", kwargs={"pk": pk}),
-        "add_ticket": reverse("htmx:incident-detail-add-ticket", kwargs={"pk": pk}),
-    }
     context = {
         "incident": incident,
-        "endpoints": action_endpoints,
         "page_title": str(incident),
     }
     return render(request, "htmx/incidents/incident_detail.html", context=context)
 
 
-def _incident_add_ack(pk: int, formdata, user: User, group: Optional[str] = None):
-    incident = get_object_or_404(Incident, id=pk)
-    is_group_member = None
-    if group:
-        group = get_object_or_404(Group, name=group)
-        is_group_member = user.groups.filter(pk=group.pk).exists()
-    form = AckForm()
-    if formdata:
-        if group and not is_group_member:
-            raise PermissionDenied("User {request.user} is not a member of the correct group")
-        form = AckForm(formdata)
-        if form.is_valid():
-            incident.create_ack(
-                user,
-                description=form.cleaned_data["description"],
-                expiration=form.cleaned_data["expiration"],
-            )
-    context = {
-        "form": form,
-        "incident": incident,
-        "page_title": str(incident),
-        "group": group,
-        "is_group_member": is_group_member,
-    }
-    return incident, context
-
-
-def incident_add_ack(request, pk: int, group: Optional[str] = None):
-    formdata = request.POST or None
-    _, context = _incident_add_ack(pk, formdata, request.user, group)
-    return render(request, "htmx/incidents/incident_add_ack.html", context=context)
-
-
-@require_POST
-def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
-    formdata = request.POST or None
-    _incident_add_ack(pk, formdata, request.user, group)
-    return redirect("htmx:incident-detail", pk=pk)
-
-
 def get_form_data(request, formclass: forms.Form):
     formdata = request.POST or None
-    incident_ids = []
     cleaned_form = None
     if formdata:
-        incident_ids = request.POST.getlist("selected_incidents", [])
         form = formclass(formdata)
         if form.is_valid():
             cleaned_form = form.cleaned_data
-    return cleaned_form, incident_ids
+    return cleaned_form
 
 
 @require_POST
-def incidents_update(request: HtmxHttpRequest):
+def incidents_update(request: HtmxHttpRequest, pk: Optional[int] = None):
     form_id = request.htmx.trigger_name or request.htmx.trigger
     formclass, queryset = INCIDENT_UPDATE_FORM_NAMES.get(form_id, (None, None))
-    formdata, incident_ids = get_form_data(request, formclass)
+    formdata = get_form_data(request, formclass)
     if formdata:
+        # If no list of selected incident pks is provided, assume singular incident update
+        incident_ids = request.POST.getlist("selected_incidents")
+        if not incident_ids:
+            incident_ids = [get_object_or_404(Incident, id=pk).pk]
         bulk_change_incidents(request.user, incident_ids, formdata, queryset)
     return HttpResponseClientRefresh()
-
-
-@require_POST
-def incident_detail_close(request, pk: int):
-    incident = get_object_or_404(Incident, id=pk)
-    if not incident.stateful:
-        LOG.warning(f"Attempt at closing the uncloseable {incident}")
-        messages.warning(request, f"Did not close {incident}, stateless incidents cannot be closed.")
-        return redirect("htmx:incident-detail", pk=pk)
-    form = DescriptionOptionalForm(request.POST or None)
-    if form.is_valid():
-        incident.set_closed(
-            request.user,
-            description=form.cleaned_data.get("description", ""),
-        )
-        LOG.info(f"{{ incident }} manually closed by {{ request.user }}")
-    return redirect("htmx:incident-detail", pk=pk)
-
-
-@require_POST
-def incident_detail_reopen(request, pk: int):
-    incident = get_object_or_404(Incident, id=pk)
-    if not incident.stateful:
-        LOG.warning(f"Attempt at reopening the unopenable {incident}")
-        messages.warning(request, f"Did not reopen {incident}, stateless incidents cannot be reopened.")
-        return redirect("htmx:incident-detail", pk=pk)
-    form = DescriptionOptionalForm(request.POST or None)
-    if form.is_valid():
-        incident.set_open(
-            request.user,
-            description=form.cleaned_data.get("description", ""),
-        )
-        LOG.info(f"{{ incident }} manually reopened by {{ request.user }}")
-    return redirect("htmx:incident-detail", pk=pk)
-
-
-@require_POST
-def incident_detail_add_ticket(request, pk: int):
-    incident = get_object_or_404(Incident, id=pk)
-    form = AddTicketUrlForm()
-    if request.POST:
-        form = AddTicketUrlForm(request.POST)
-        if form.is_valid():
-            incident.ticket_url = form.cleaned_data["ticket_url"]
-            incident.save()
-
-    return redirect("htmx:incident-detail", pk=pk)
-
-
-@require_POST
-def incident_detail_edit_ticket(request, pk: int):
-    incident = get_object_or_404(Incident, id=pk)
-    form = EditTicketUrlForm()
-    if request.POST:
-        form = EditTicketUrlForm(request.POST)
-        if form.is_valid():
-            incident.ticket_url = form.cleaned_data["ticket_url"]
-            incident.save()
-
-    return redirect("htmx:incident-detail", pk=pk)
 
 
 def _get_page_size(params):

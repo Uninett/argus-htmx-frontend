@@ -123,22 +123,24 @@ def incident_detail_add_ack(request, pk: int, group: Optional[str] = None):
 
 def get_form_data(request, formclass: forms.Form):
     formdata = request.POST or None
-    incident_ids = []
     cleaned_form = None
     if formdata:
-        incident_ids = request.POST.getlist("selected_incidents", [])
         form = formclass(formdata)
         if form.is_valid():
             cleaned_form = form.cleaned_data
-    return cleaned_form, incident_ids
+    return cleaned_form
 
 
 @require_POST
-def incidents_update(request: HtmxHttpRequest):
+def incidents_update(request: HtmxHttpRequest, pk: Optional[int] = None):
     form_id = request.htmx.trigger_name or request.htmx.trigger
     formclass, queryset = INCIDENT_UPDATE_FORM_NAMES.get(form_id, (None, None))
-    formdata, incident_ids = get_form_data(request, formclass)
+    formdata = get_form_data(request, formclass)
     if formdata:
+        # If no list of selected incident pks is provided, assume singular incident update
+        incident_ids = request.POST.getlist("selected_incidents")
+        if not incident_ids:
+            incident_ids = [get_object_or_404(Incident, id=pk).pk]
         bulk_change_incidents(request.user, incident_ids, formdata, queryset)
     return HttpResponseClientRefresh()
 

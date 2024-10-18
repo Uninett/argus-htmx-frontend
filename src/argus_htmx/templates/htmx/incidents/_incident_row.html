@@ -2,20 +2,20 @@
 	  HTMX-app
 	  {% block incident_pk %}
 	  {% include "htmx/incidents/_incident_pk.html" %}
-	  {% endblock %}
+	  {% endblock incident_pk %}
 	  {% block status %}
 	  {% include "htmx/incidents/_incident_status.html" %}
-	  {% endblock %}
+	  {% endblock status %}
 	  {% block acknowledgement %}
 	  {% include "htmx/incidents/_incident_ack.html" %}
-	  {% endblock %}
+	  {% endblock acknowledgement %}
 	  {% block tag %}
 	  {% include "htmx/incidents/_incident_tag.html" with tag="location" %}
-	  {% endblock %}
+	  {% endblock tag %}
 	  {% block start_time %}
 	  {% include "htmx/incidents/_incident_start_time.html" %}
-	  {% endblock %}
+	  {% endblock start_time %}
 	  {% block description %}
 	  {% include "htmx/incidents/_incident_description.html" %}
-	  {% endblock %}
+	  {% endblock description %}
   </li>

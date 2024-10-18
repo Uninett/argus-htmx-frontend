@@ -40,3 +40,7 @@ line-length = 120
 
 [tool.ruff.lint]
 ignore = ["E731"]
+
+[tool.djlint]
+profile="django"
+indent = 2

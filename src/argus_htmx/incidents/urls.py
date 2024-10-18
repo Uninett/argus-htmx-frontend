@@ -14,4 +14,5 @@ urlpatterns = [
     path("<int:pk>/ticket-edit-detail/", views.incident_detail_edit_ticket, name="incident-detail-edit-ticket"),
     path("<int:pk>/ticket-add-detail/", views.incident_detail_add_ticket, name="incident-detail-add-ticket"),
     path("update/<str:action>/", views.incidents_update, name="incidents-update"),
+    path("<int:pk>/update/<str:action>/", views.incidents_update, name="incidents-update"),
 ]

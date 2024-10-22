@@ -15,7 +15,7 @@ from django.urls import reverse
 
 from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django_htmx.middleware import HtmxDetails
 from django_htmx.http import HttpResponseClientRefresh
 
@@ -141,7 +141,11 @@ def get_form_data(request, formclass: forms.Form):
 @require_POST
 def incidents_update(request: HtmxHttpRequest):
     form_id = request.htmx.trigger_name or request.htmx.trigger
-    formclass, callback_func = INCIDENT_UPDATE_ACTIONS.get(form_id, (None, None))
+    try:
+        formclass, callback_func = INCIDENT_UPDATE_ACTIONS[form_id]
+    except KeyError:
+        LOG.error(f"Unrecognized form name {form_id} when updating incidents.")
+        return HttpResponseBadRequest("Invalid form name")
     formdata, incident_ids = get_form_data(request, formclass)
     if formdata:
         bulk_change_incidents(request.user, incident_ids, formdata, callback_func)

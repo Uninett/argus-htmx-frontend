@@ -25,8 +25,13 @@ from argus.util.datetime_utils import make_aware
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
 from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
-from ..utils import bulk_change_incidents, bulk_ack_queryset, bulk_close_queryset, bulk_reopen_queryset, \
-    bulk_change_ticket_url_queryset
+from ..utils import (
+    bulk_change_incidents,
+    bulk_ack_queryset,
+    bulk_close_queryset,
+    bulk_reopen_queryset,
+    bulk_change_ticket_url_queryset,
+)
 
 User = get_user_model()
 LOG = logging.getLogger(__name__)

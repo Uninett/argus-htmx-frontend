@@ -19,7 +19,7 @@ classifiers = [
 ]
 dynamic = ["version"]
 dependencies = [
-    "argus-server>=1.23.0",
+    "argus-server>=1.24.0",
     "django-htmx",
     "django-widget-tweaks==1.5.0",
     # The next is for python_version < 3.12 but we simplify code by always needing it
@@ -37,6 +37,7 @@ name = "argus_htmx"
 
 [tool.ruff]
 line-length = 120
+output-format = "full"
 
 [tool.ruff.lint]
-ignore = ["E731"]
+select = ["E9", "F63", "F7", "F82"]

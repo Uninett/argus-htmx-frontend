@@ -5,6 +5,6 @@
     hx-post="{% url endpoint|default:'htmx:incident-list' %}"
     hx-include="[name='selected_incidents']"
   {% else %}
-    {{ block.super }}
+    hx-post="{% url endpoint|default:'htmx:incidents-update' pk=incident.pk %}"
   {% endif %}
 {% endblock %}

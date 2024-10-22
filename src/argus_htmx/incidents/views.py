@@ -39,7 +39,7 @@ DEFAULT_PAGE_SIZE = getattr(settings, "ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE", 10)
 ALLOWED_PAGE_SIZES = getattr(settings, "ARGUS_INCIDENTS_PAGE_SIZES", [10, 20, 50, 100])
 
 # Map request trigger to parameters for incidents update
-INCIDENT_UPDATE_FORM_NAMES = {
+INCIDENT_UPDATE_ACTIONS = {
     "ack": (AckForm, bulk_ack_queryset),
     "close": (DescriptionOptionalForm, bulk_close_queryset),
     "reopen": (DescriptionOptionalForm, bulk_reopen_queryset),
@@ -141,10 +141,10 @@ def get_form_data(request, formclass: forms.Form):
 @require_POST
 def incidents_update(request: HtmxHttpRequest):
     form_id = request.htmx.trigger_name or request.htmx.trigger
-    formclass, queryset = INCIDENT_UPDATE_FORM_NAMES.get(form_id, (None, None))
+    formclass, callback_func = INCIDENT_UPDATE_ACTIONS.get(form_id, (None, None))
     formdata, incident_ids = get_form_data(request, formclass)
     if formdata:
-        bulk_change_incidents(request.user, incident_ids, formdata, queryset)
+        bulk_change_incidents(request.user, incident_ids, formdata, callback_func)
     return HttpResponseClientRefresh()
 
 

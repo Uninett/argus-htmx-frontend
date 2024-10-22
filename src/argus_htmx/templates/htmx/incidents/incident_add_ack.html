@@ -47,7 +47,7 @@
                     </fieldset>
                 </form>
             {% else %}
-                You need to <a href="/admin/">Log in</a>
+                You need to <a href="{% url 'htmx:login' %}">Log in</a>
             {% endif %}
         </section>
     {% endblock add_ack %}

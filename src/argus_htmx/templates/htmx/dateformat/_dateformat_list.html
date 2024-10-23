@@ -8,7 +8,7 @@
                hx-post="{% url 'htmx:change-dateformat' %}"
                hx-trigger="change"
                hx-swap="textContent"
-               hx-target="#dateformat-badge"
+               hx-target="previous summary .badge"
                hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
         />
     </li>

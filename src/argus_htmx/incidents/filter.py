@@ -15,6 +15,7 @@ class IncidentFilterForm(forms.Form):
     acked = forms.BooleanField(required=False)
     unacked = forms.BooleanField(required=False)
     source = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple(),
         choices=tuple(SourceSystem.objects.values_list("id", "name")),
         required=False,
     )

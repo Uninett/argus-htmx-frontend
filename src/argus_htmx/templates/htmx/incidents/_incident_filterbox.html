@@ -17,6 +17,8 @@
                         <span class="label-text">{{ field.label }}</span>
                         {% if field|field_type == "booleanfield" %}
                             {{ field|add_class:"checkbox checkbox-accent border" }}
+                        {% elif field.name == "source" %}
+                          {% include 'htmx/incidents/_incident_source_select.html' %}
                         {% elif field.name == "maxlevel" %}
                             <div>
                                 {{ field|add_class:"range range-primary range-xs" }}

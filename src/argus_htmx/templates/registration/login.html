@@ -7,7 +7,8 @@
     <h2 class="card-title">Log In</h2>
 
     <section class="card-body">
-    <form method="post" class="flex flex-col gap-6">
+    {% if "local" in backends %}
+    <form method="post" class="flex flex-col gap-6" action"{{ backends.local.url }}">
       {% csrf_token %}
       {% for field in form %}
       <label class="flex flex-row items-center gap-2">
@@ -18,8 +19,16 @@
         </div>
       </label>
       {% endfor %}
-      <button type="submit" class="btn btn-primary">Log In</button>
+      <button type="submit" class="btn btn-primary">{{ backends.local.display_name }}</button>
     </form>
+    {% endif %}
+
+    {% if backends.external %}
+    <h3>Login with</h3>
+    {% for backend in backends.external %}
+    <a class="btn btn-primary" href="{{ backend.url }}">{{ backend.display_name }}</a>
+    {% endfor %}
+    {% endif %}
     </section>
   </div>
 </div>

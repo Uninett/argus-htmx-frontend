@@ -140,11 +140,11 @@ def get_form_data(request, formclass: forms.Form):
 
 @require_POST
 def incidents_update(request: HtmxHttpRequest):
-    form_id = request.htmx.trigger_name or request.htmx.trigger
+    form_name = request.POST.get("form_name")
     try:
-        formclass, callback_func = INCIDENT_UPDATE_ACTIONS[form_id]
+        formclass, callback_func = INCIDENT_UPDATE_ACTIONS[form_name]
     except KeyError:
-        LOG.error(f"Unrecognized form name {form_id} when updating incidents.")
+        LOG.error(f"Unrecognized form name {form_name} when updating incidents.")
         return HttpResponseBadRequest("Invalid form name")
     formdata, incident_ids = get_form_data(request, formclass)
     if formdata:

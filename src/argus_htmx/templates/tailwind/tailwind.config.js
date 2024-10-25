@@ -1,5 +1,7 @@
 const projectPaths = [
     '../templates/**/*.html',
+    './**/templates/**/*.html',
+    'src/argus_htmx/templates/**/*.html'
 ];
 
 const contentPaths = [...projectPaths];
@@ -13,6 +15,9 @@ module.exports = {
         },
         ...{{ themeoverride }},
     },
+    safelist: [
+        "htmx-request"
+    ],
     daisyui: {
         themes: {{ daisyuithemes }},
     },

@@ -7,17 +7,19 @@ description = "HTTP Frontend as a django app for argus-server using HTMx"
 name = "argus-htmx-frontend"
 readme = "README.rst"
 authors = [{name = "Hanne Moa", email = "hanne.moa@sikt.no"}]
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",
     "Framework :: Django",
     "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
     "Programming Language :: Python :: 3 :: Only",
     "Environment :: Web Environment",
 ]
 dynamic = ["version"]
 dependencies = [
-    "argus-server>=1.20.1",
+    "argus-server>=1.25.0",
     "django-htmx",
     "django-widget-tweaks==1.5.0",
     # The next is for python_version < 3.12 but we simplify code by always needing it
@@ -32,3 +34,10 @@ docs = ["sphinx"]
 
 [tool.flit.module]
 name = "argus_htmx"
+
+[tool.ruff]
+line-length = 120
+output-format = "full"
+
+[tool.ruff.lint]
+select = ["E9", "F63", "F7", "F82"]

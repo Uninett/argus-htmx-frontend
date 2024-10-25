@@ -23,9 +23,9 @@
 <span class="badge badge-accent">Closed</span>{% endif %}
 {% if incident.acked %}
 <span class="badge badge-primary">Acknowledged</span>{% else %}
-<span class="badge badge-accent">Unanacknowledged</span>{% endif %}
+<span class="badge badge-accent">Unacknowledged</span>{% endif %}
 {% if incident.ticket_url %}
-<span class="badge badge-primary">Acknowledged</span>{% else %}
+<span class="badge badge-primary"><a href="{{ incident.ticket_url }}" target="_blank">Ticket {{ incident.ticket_url }}</a></span>{% else %}
 <span class="badge badge-accent">No ticket</span>{% endif %}
 </p>
 </section>
@@ -47,10 +47,10 @@
 <p>{{ incident.description }}</p>
 
 <h3 class="font-bold">Start time</h3>
-<p>{{ incident.start_time }}</p>
+<p>{{ incident.start_time|date:datetime_format }}</p>
 
 <h3 class="font-bold">Duration</h3>
-<p>{{ incident.end_time }}</p>
+<p>{{ incident.end_time|date:datetime_format }}</p>
 
 <h3 class="font-bold">Source</h3>
 <p>{{ incident.source.name }}</p>
@@ -65,23 +65,24 @@
 
 <h3 class="font-bold">Ticket</h3>
 <p>
-{% if incident.ticket_url %}<a href="{{ incident.ticket_url }}">{{ incident.ticket_url }}</a>{% else %}—{% endif %}
+{% if incident.ticket_url %}<a href="{{ incident.ticket_url }}" target="_blank">{{ incident.ticket_url }}</a>{% else %}—{% endif %}
 </p>
 
 <div class="card-actions">
 
 {% if incident.stateful %}
 {% if incident.open %}
-{% include 'htmx/incidents/_incident_close_modal.html' with dialog_id="close-incident-dialog" button_title="Close" header="Manually close incident" explanation="Write a message describing why the incident was manually closed" endpoint=endpoints.close cancel_text="Cancel" submit_text="Close now" %}
+{% include "htmx/incidents/_incident_close_modal.html" with dialog_id="close-incident-dialog" button_title="Close" header="Manually close incident" explanation="Write a message describing why the incident was manually closed" endpoint=endpoints.close cancel_text="Cancel" submit_text="Close now" %}
 {% else %}
-{% include 'htmx/incidents/_incident_reopen_modal.html' with dialog_id="reopen-incident-dialog" button_title="Reopen" header="Manually reopen incident" explanation="Write a message describing why the incident was manually reopend" endpoint=endpoints.reopen cancel_text="Cancel" submit_text="Reopen now" %}
+{% include "htmx/incidents/_incident_reopen_modal.html" with dialog_id="reopen-incident-dialog" button_title="Reopen" header="Manually reopen incident" explanation="Write a message describing why the incident was manually reopend" endpoint=endpoints.reopen cancel_text="Cancel" submit_text="Reopen now" %}
 {% endif %}
 {% endif %}
 
 {% if incident.ticket_url %}
-{% include 'htmx/incidents/_incident_ticket_edit_modal.html' with dialog_id="edit-ticket-dialog" button_title="Edit ticket url" header="Edit ticket" explanation="" cancel_text="Cancel" submit_text="Update" %}
+{% include "htmx/incidents/_incident_ticket_edit_modal.html" with dialog_id="edit-ticket-dialog" button_title="Edit ticket url" header="Edit ticket" explanation="" endpoint=endpoints.edit_ticket cancel_text="Cancel" submit_text="Update" %}
 {% else %}
-{% include 'htmx/incidents/_incident_ticket_autocreate_modal.html' with dialog_id="create-ticket-dialog" button_title="Create ticket url" header="Create ticket" explanation="Are you sure you want to automatically generate a ticket from this incident?" cancel_text="No" submit_text="Yes" %}
+<!-- Manually create ticket dialog -->
+{% include "htmx/incidents/_incident_ticket_edit_modal.html" with dialog_id="manual-create-ticket-dialog" button_title="Add ticket url" header="Add url to existing ticket" explanation="Are you sure you want to store this url to an existing ticket on this incident?" endpoint=endpoints.add_ticket cancel_text="Cancel" submit_text="Add ticket" %}
 {% endif %}
 
 </div>
@@ -99,14 +100,14 @@
     </p>
     <p>
     {{ ack.event.actor }}
-    {{ ack.event.timestamp }}
+    {{ ack.event.timestamp|date:datetime_format }}
     </p>
-    {% if ack.expiration%}<p>Expires: {{ ack.expiration }}</p>{% endif %}
+    {% if ack.expiration %}<p>Expires: {{ ack.expiration|date:datetime_format }}</p>{% endif %}
     </div>
     {% endfor %}
   <div class="card-actions divide-none">
 
-{% include 'htmx/incidents/_incident_acknowledge_modal.html' with dialog_id="create-acknowledgment-dialog" button_title="Create acknowledgment" header="Submit acknowledgment" explanation="Write a message describing why this incident was acknowledged" endpoint=endpoints.ack cancel_text="Cancel" submit_text="Submit" %}
+{% include "htmx/incidents/_incident_acknowledge_modal.html" with dialog_id="create-acknowledgment-dialog" button_title="Create acknowledgment" header="Submit acknowledgment" explanation="Write a message describing why this incident was acknowledged" endpoint=endpoints.ack cancel_text="Cancel" submit_text="Submit" %}
 
   </div>
 </div>
@@ -119,14 +120,14 @@
 {% if not event.ack %}
 <div class="card-body flex-none">
 <p>
-{{ event.type }}
+{{ event.get_type_display }}
 </p>
 <p>
 {{ event.description }}
 </p>
 <p>
 {{ event.actor }}
-{{ event.timestamp }}
+{{ event.timestamp|date:datetime_format }}
 </p>
 </div>
 {% endif %}

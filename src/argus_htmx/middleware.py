@@ -9,9 +9,8 @@ from django.utils.encoding import force_str
 
 
 class LoginRequiredMiddleware:
-
     def __init__(self, get_response):
-        self.public_urls = getattr(settings, 'PUBLIC_URLS', ())
+        self.public_urls = getattr(settings, "PUBLIC_URLS", ())
         self.login_url = force_str(settings.LOGIN_URL)
         self.get_response = get_response
 
@@ -20,13 +19,11 @@ class LoginRequiredMiddleware:
         return response
 
     def process_view(self, request, view_func, _view_args, _view_kwargs):
-        assert hasattr(request, 'user'), (
+        assert hasattr(request, "user"), (
             "The LoginRequiredMiddleware requires authentication middleware "
             "to be installed. Edit your MIDDLEWARE%s setting to insert "
             "'django.contrib.auth.middleware.AuthenticationMiddleware' "
-            "before this middleware." % (
-                "_CLASSES" if settings.MIDDLEWARE is None else ""
-            )
+            "before this middleware." % ("_CLASSES" if settings.MIDDLEWARE is None else "")
         )
 
         # If path is public, allow
@@ -35,12 +32,12 @@ class LoginRequiredMiddleware:
                 return None
 
         # If CBV has the attribute login_required == False, allow
-        view_class = getattr(view_func, 'view_class', None)
-        if view_class and not getattr(view_class, 'login_required', True):
+        view_class = getattr(view_func, "view_class", None)
+        if view_class and not getattr(view_class, "login_required", True):
             return None
 
         # If view_func.login_required == False, allow
-        if not getattr(view_func, 'login_required', True):
+        if not getattr(view_func, "login_required", True):
             return None
 
         # Allow authenticated users

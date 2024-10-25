@@ -36,7 +36,12 @@ Do this in your workdir, which could be the checked out `argus-server`_ repo.
 Django-style
 ~~~~~~~~~~~~
 
-In your local settings that star-imports from an `argus-server`_ settings file::
+This assumes that you have a local settings file (we recommend calling it
+"localsettings.py" since that is hidden by .gitignore) as a sibling of
+``src/``.
+
+In this local settings file (that star-imports from an `argus-server`_ settings
+file) at minimum add::
 
     INSTALLED_APPS += [
         "django_htmx",
@@ -44,14 +49,38 @@ In your local settings that star-imports from an `argus-server`_ settings file::
         "widget_tweaks",
     ]
     ROOT_URLCONF = "urls"
-    MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]
+    MIDDLEWARE += [
+        "django_htmx.middleware.HtmxMiddleware",
+        "argus_htmx.middleware.LoginRequiredMiddleware",
+    ]
+    LOGIN_URL = "/accounts/login"
+    LOGIN_REDIRECT_URL = "/incidents/"
+    PUBLIC_URLS = [
+        "/accounts/login/",
+        "/api/",
+    ]
+    TEMPLATES = [
+        {
+            "BACKEND": "django.template.backends.django.DjangoTemplates",
+            "DIRS": [str(SITE_DIR / "templates")],
+            "APP_DIRS": True,
+            "OPTIONS": {
+                "debug": get_bool_env("TEMPLATE_DEBUG", False),
+                "context_processors": [
+                    "django.template.context_processors.debug",
+                    "django.template.context_processors.request",
+                    "django.contrib.auth.context_processors.auth",
+                    "django.contrib.messages.context_processors.messages",
+                    "social_django.context_processors.backends",
+                    "social_django.context_processors.login_redirect",
+                    "argus_htmx.context_processors.theme_via_session",
+                    "argus_htmx.context_processors.datetime_format_via_session",
+                ],
+            },
+        }
+    ]
 
-In the same file, add a copy of the entirety of ``TEMPLATES``. Choose one of
-the functions in ``argus_htmx.context_processors``. In the entry for
-``django.template.backends.django.DjangoTemplates``, append the full dotted
-path to the end of the ``context_processors`` list.
-
-Next to ``localsettings.py`` create an ``urls.py`` containing::
+As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
 
    from django.urls import path, include
 
@@ -64,26 +93,68 @@ Next to ``localsettings.py`` create an ``urls.py`` containing::
 With EXTRA_APPS
 ~~~~~~~~~~~~~~~
 
-Choose one of the functions in ``argus_htmx.context_processors``, exemplified
-by "theme_via_GET" below.
+It is necessary to override some settings.
 
-In your environment variables::
+In for instance your ``localsettings.py``, add::
 
-    ARGUS_EXTRA_APPS = '[{"app_name": "django_htmx"}, {"app_name": "argus_htmx", "urls": {"path": "", "urlpatterns_module": "argus_htmx.urls"}, "context_processors": ["argus_htmx.context_processor.theme_via_GET"]}, {"app_name": "widget_tweaks"}]'
+    LOGIN_URL = "/accounts/login"
+    LOGIN_REDIRECT_URL = "/incidents/"
+    PUBLIC_URLS = [
+        "/accounts/login/",
+        "/api/",
+    ]
 
-In your local settings that star-imports from an `argus-server`_ settings file::
+If you use a shell script to control ``manage.py``, add the following
+environment variable::
 
-    MIDDLEWARE += ["django_htmx.middleware.HtmxMiddleware"]
+    export ARGUS_EXTRA_APPS=`cat extra.json`
+
+In the file ``extra.json``, (which can be syntax checked with for instance
+``jq``), a sibling to ``localsettings.py``::
+
+    [
+      {
+        "app_name": "django_htmx",
+        "middleware": {
+          "django_htmx.middleware.HtmxMiddleware": "end"
+        }
+      },
+      {
+        "app_name": "argus_htmx",
+        "urls": {
+          "path": "",
+          "urlpatterns_module": "argus_htmx.urls"
+        },
+        "context_processors": [
+          "argus_htmx.context_processors.theme_via_session",
+          "argus_htmx.context_processors.datetime_format_via_session"
+        ],
+        "middleware": {
+          "argus_htmx.middleware.LoginRequiredMiddleware": "end"
+        }
+      },
+      {
+        "app_name": "template_partials"
+      },
+      {"app_name": "widget_tweaks"},
+      {
+        "app_name": "debug_toolbar",
+        "urls": {
+          "path": "__debug__/",
+          "urlpatterns_module": "debug_toolbar.urls"
+        }
+      }
+    ]
 
 Update
-------
+======
 
 On every new version, reinstall the dependencies since there might be new ones.
 
 Themes and styling
-------------------
+==================
 
-To try out class-less themes use the context processor
+To try out daisyUI themes use the context processor
 ``argus_htmx.context_processor.theme_via_session`` instead of
 ``argus_htmx.context_processor.theme_via_GET``.
 
@@ -93,12 +164,12 @@ This project supports Tailwind CSS utility classes and daisyUI components for st
 Below is an overview of the stack, installation and build instructions, and configuration details for themes and styles.
 
 Overview
-~~~~~~~~
+--------
 * Tailwind CSS: A utility-first CSS framework for rapidly building custom user interfaces.
 * daisyUI: A component library for Tailwind CSS that provides a set of ready-to-use components as well as color themes.
 
 Installation and build instructions
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 Recommended but open for tweaks and adaptations steps:
 
 1. Get Tailwind standalone CLI bundled with daisyUI from
@@ -117,16 +188,24 @@ Recommended but open for tweaks and adaptations steps:
    https://github.com/tailwindlabs/tailwindcss/discussions/12294#discussioncomment-8268378.
 2. (Linux/OsX) Move the tailwindcss file to your $PATH, for instance to ``~/bin/`` or ``.local/bin``.
 3. Go to the repo directory (parent of ``src/``)
-4. Build main stylesheet file using ``tailwindcss`` executable from step 1 and pointing to the included config file::
+4. Build main stylesheet file using ``tailwindcss`` executable from step 1 and
+   pointing to the included config file:
 
-        tailwindcss -c src/argus_htmx/tailwind/tailwind.config.js -i src/argus_htmx/tailwind/styles.css --output src/argus_htmx/static/styles.css
+   Manually::
 
-   We recommend running this is in a separate terminal with the ``--watch``
-   flag so that the "styles.css" file is auto-updated when you save a template.
+        tailwindcss -c src/argus_htmx/tailwindtheme/tailwind.config.js -i src/argus_htmx/tailwindtheme/styles.css --output src/argus_htmx/static/styles.css
+
+   Running with the ``--watch`` flag for automatic update on change seems
+   error-prone so we've made it very easy to run the command, with ``make`` or ``tox``::
+
+        make tailwind
+        tox -e tailwind
+
+   Either will rebuild the styles for you.
 
 
 Customization
-~~~~~~~~~~~~~
+-------------
 
 How to customize the look:
 
@@ -194,17 +273,17 @@ How to customize the look:
     * `Tailwind CSS theme customization`_
 
 *  Override the default main stylesheet path by providing a ``path_to_stylesheet`` value in a template ``context``.
-*  Include additional styles/stylesheets using ``head`` block in your templates.
-*  Generate Tailwind config file by running ``tailwind_config`` management
+*  Include additional styles/stylesheets using the ``head`` block in your templates.
+*  Generate a Tailwind config file by running the ``tailwind_config`` management
    command. By default the generated file will be based on
    ``src/argus_htmx/tailwindtheme/tailwind.config.template.js`` and expected
    values will be injected with reasonable defaults.
 
 UI Settings
------------
+===========
 
 Incident table column customization
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------------------
 You can customize which columns are shown in the incidents listing table by overriding the
 ``INCIDENT_TABLE_COLUMNS`` setting. This setting takes a list of ``str`` or
 ``argus_htmx.incidents.customization.IncidentTableColumn`` instances. when given a ``str``, this
@@ -240,21 +319,30 @@ For inbuilt support for other types of columns see the howtos in `the local docs
 .. _Tailwind CSS theme customization: https://tailwindcss.com/docs/theme
 
 Custom widget
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-------------
 
 Argus supports showing an extra widget next to the menubar in the incidents listing. This box can
-take the width of 1/3 of the window. You can add widget by creating a context processor that
-injects a ``incidents_extra_widget`` variable that points to a html template::
+take the width of 1/3 of the window. You can add the widget by creating a context processor that
+injects an ``incidents_extra_widget`` variable that points to an html template::
 
     def extra_widget(request):
         return {
             "incidents_extra_widget": "path/to/_extra_widget.html",
         }
 
-*note* don't forget to include the context processor in your settings
+*note* Don't forget to include the context processor in your settings
 
 You could then create ``path/to/_extra_widget.html`` as following::
 
     <div id="service-status" class="border border-primary rounded-2xl h-full p-2">
       My custom widget
     </div>
+
+
+Page size
+---------
+
+By default, incidents are shown with a page size of ``10`` (ie. 10 rows at a time), and the user can
+select a different page size from ``[10, 20, 50, 100]``. It possible to override these settings by
+setting the ``ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE`` and ``ARGUS_INCIDENTS_PAGE_SIZES`` setting
+respectively.

@@ -4,6 +4,7 @@ import logging
 from typing import Optional
 from datetime import datetime
 
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.contrib import messages
@@ -21,23 +22,21 @@ from argus.util.datetime_utils import make_aware
 
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
-from .forms import AckForm, DescriptionOptionalForm
+from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
 
 
 User = get_user_model()
 LOG = logging.getLogger(__name__)
+DEFAULT_PAGE_SIZE = getattr(settings, "ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE", 10)
+ALLOWED_PAGE_SIZES = getattr(settings, "ARGUS_INCIDENTS_PAGE_SIZES", [10, 20, 50, 100])
 
 
 def prefetch_incident_daughters():
-    return (
-        Incident.objects
-        .select_related("source")
-        .prefetch_related(
-            "incident_tag_relations",
-            "incident_tag_relations__tag",
-            "events",
-            "events__ack",
-        )
+    return Incident.objects.select_related("source").prefetch_related(
+        "incident_tag_relations",
+        "incident_tag_relations__tag",
+        "events",
+        "events__ack",
     )
 
 
@@ -46,20 +45,14 @@ class HtmxHttpRequest(HttpRequest):
 
 
 # fetch with htmx
-def incident_row(request, pk: int):
-    incident = get_object_or_404(Incident, d=pk)
-    context = {
-        "incident": incident,
-    }
-    return render(request, "htmx/incidents/_incident_row.html", context=context)
-
-
 def incident_detail(request, pk: int):
     incident = get_object_or_404(Incident, id=pk)
     action_endpoints = {
         "ack": reverse("htmx:incident-detail-add-ack", kwargs={"pk": pk}),
         "close": reverse("htmx:incident-detail-close", kwargs={"pk": pk}),
         "reopen": reverse("htmx:incident-detail-reopen", kwargs={"pk": pk}),
+        "edit_ticket": reverse("htmx:incident-detail-edit-ticket", kwargs={"pk": pk}),
+        "add_ticket": reverse("htmx:incident-detail-add-ticket", kwargs={"pk": pk}),
     }
     context = {
         "incident": incident,
@@ -90,8 +83,8 @@ def _incident_add_ack(pk: int, formdata, user: User, group: Optional[str] = None
         "form": form,
         "incident": incident,
         "page_title": str(incident),
-        'group': group,
-        'is_group_member': is_group_member,
+        "group": group,
+        "is_group_member": is_group_member,
     }
     return incident, context
 
@@ -143,7 +136,41 @@ def incident_detail_reopen(request, pk: int):
     return redirect("htmx:incident-detail", pk=pk)
 
 
-@require_GET
+@require_POST
+def incident_detail_add_ticket(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = AddTicketUrlForm()
+    if request.POST:
+        form = AddTicketUrlForm(request.POST)
+        if form.is_valid():
+            incident.ticket_url = form.cleaned_data["ticket_url"]
+            incident.save()
+
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+@require_POST
+def incident_detail_edit_ticket(request, pk: int):
+    incident = get_object_or_404(Incident, id=pk)
+    form = EditTicketUrlForm()
+    if request.POST:
+        form = EditTicketUrlForm(request.POST)
+        if form.is_valid():
+            incident.ticket_url = form.cleaned_data["ticket_url"]
+            incident.save()
+
+    return redirect("htmx:incident-detail", pk=pk)
+
+
+def _get_page_size(params):
+    try:
+        if (page_size := int(params.pop("page_size", DEFAULT_PAGE_SIZE))) in ALLOWED_PAGE_SIZES:
+            return page_size
+    except ValueError:
+        pass
+    return DEFAULT_PAGE_SIZE
+
+
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     columns = get_incident_table_columns()
 
@@ -160,8 +187,8 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
 
     # Standard Django pagination
     page_num = params.pop("page", "1")
-    PAGE_SIZE = 10
-    paginator = Paginator(object_list=qs, per_page=PAGE_SIZE)
+    page_size = _get_page_size(params)
+    paginator = Paginator(object_list=qs, per_page=page_size)
     page = paginator.get_page(page_num)
 
     # The htmx magic - use a different, minimal base template for htmx
@@ -181,7 +208,8 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
-        "per_page": PAGE_SIZE,
+        "page_size": page_size,
+        "all_page_sizes": ALLOWED_PAGE_SIZES,
     }
 
     return render(request, "htmx/incidents/incident_list.html", context=context)

@@ -33,120 +33,62 @@ Configure
 
 Do this in your workdir, which could be the checked out `argus-server`_ repo.
 
-Django-style
-~~~~~~~~~~~~
-
 This assumes that you have a local settings file (we recommend calling it
 "localsettings.py" since that is hidden by .gitignore) as a sibling of
 ``src/``.
 
-In this local settings file (that star-imports from an `argus-server`_ settings
-file) at minimum add::
+At the top of this local settings file, copy the contents of `argus.htmx.settings`.
+(You might want to switch out ``from argus.site.settings.backend import *`` with
+``from argus.site.settings.dev import *``.)
 
-    INSTALLED_APPS += [
-        "django_htmx",
-        "argus_htmx",
-        "widget_tweaks",
-    ]
-    ROOT_URLCONF = "urls"
-    MIDDLEWARE += [
-        "django_htmx.middleware.HtmxMiddleware",
-        "argus_htmx.middleware.LoginRequiredMiddleware",
-    ]
-    LOGIN_URL = "/accounts/login/"
-    LOGIN_REDIRECT_URL = "/incidents/"
-    LOGIN_REDIRECT_URL = "/incidents/"
-    LOGOUT_REDIRECT_URL = "/"
-    PUBLIC_URLS = [
-        "/accounts/login/",
-        "/api/",
-        "/oidc/",
-    ]
-    TEMPLATES = [
-        {
-            "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "APP_DIRS": True,
-            "OPTIONS": {
-                "debug": get_bool_env("TEMPLATE_DEBUG", False),
-                "context_processors": [
-                    "django.template.context_processors.debug",
-                    "django.template.context_processors.request",
-                    "django.contrib.auth.context_processors.auth",
-                    "django.contrib.messages.context_processors.messages",
-                    "social_django.context_processors.backends",
-                    "social_django.context_processors.login_redirect",
-                    "argus_htmx.context_processors.theme_via_session",
-                    "argus_htmx.context_processors.datetime_format_via_session",
-                ],
-            },
-        }
-    ]
+The ``argus.site.utils.update_settings`` function will add or change the settings
 
-As a sibling to ``localsettings.py`` create an ``urls.py`` containing::
+* INSTALLED_APPS
+* LOGIN_REDIRECT_URL
+* LOGIN_URL
+* LOGOUT_REDIRECT_URL
+* LOGOUT_URL
+* MIDDLEWARE
+* PUBLIC_URLS
+* ROOT_URLCONF
+* TEMPLATES
 
-   from django.urls import path, include
+See ``argus_htmx.appconfig`` for what is being set. The management command
+``printsettings`` will print out the complete settings used.
 
-   from argus.site.urls import urlpatterns
+Customizing
+-----------
 
-   urlpatterns += [
-       path("", include("argus_htmx.urls"))
-   ]
+If you add more pages and endpoints you will have to write your own root
+urls.py and set ROOT_URLCONF appropriately.
 
-With EXTRA_APPS
-~~~~~~~~~~~~~~~
+If you have some other apps you want installed and configured, you could either
+add the necessary settings to your ``localsettings.py`` or use the extra-apps
+machinery. The later is especially useful during the development phase when you
+haven't settled on which apps to use yet.
 
-It is necessary to override some settings.
+With extra-apps machinery
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In for instance your ``localsettings.py``, add::
+You make a JSON-file which is read into your settings via one of two
+environment variables.
 
-    LOGIN_URL = "/accounts/login"
-    LOGIN_REDIRECT_URL = "/incidents/"
-    PUBLIC_URLS = [
-        "/accounts/login/",
-        "/api/",
-    ]
-
-If you use a shell script to control ``manage.py``, add the following
-environment variable::
+In order to add apps and settings that *extends* ``argus-server`` and this
+``app`` you use the environment variable ``ARGUS_EXTRA_APPS``::
 
     export ARGUS_EXTRA_APPS=`cat extra.json`
 
-In the file ``extra.json``, (which can be syntax checked with for instance
-``jq``), a sibling to ``localsettings.py``::
+If you want to *override* existing apps the environment variable to use is
+``ARGUS_OVERRIDING_APPS``::
 
-    [
-      {
-        "app_name": "django_htmx",
-        "middleware": {
-          "django_htmx.middleware.HtmxMiddleware": "end"
-        }
-      },
-      {
-        "app_name": "argus_htmx",
-        "urls": {
-          "path": "",
-          "urlpatterns_module": "argus_htmx.urls"
-        },
-        "context_processors": [
-          "argus_htmx.context_processors.theme_via_session",
-          "argus_htmx.context_processors.datetime_format_via_session"
-        ],
-        "middleware": {
-          "argus_htmx.middleware.LoginRequiredMiddleware": "end"
-        }
-      },
-      {
-        "app_name": "template_partials"
-      },
-      {"app_name": "widget_tweaks"},
-      {
-        "app_name": "debug_toolbar",
-        "urls": {
-          "path": "__debug__/",
-          "urlpatterns_module": "debug_toolbar.urls"
-        }
-      }
-    ]
+    export ARGUS_OVERRIDING_APPS=`cat overriding.json`
+
+Have a look at the contents of ``argus_htmx.appconfig._app_settings`` for an
+example of what you can set this way.
+
+You can merge your urlpatterns with the apps's urlpatterns via the
+``argus.site.utils.get_urlpatterns`` function, see ``argus.htmx.urls`` for an
+example.
 
 Optional authentication backend settings
 ----------------------------------------

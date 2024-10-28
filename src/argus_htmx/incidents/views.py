@@ -76,7 +76,7 @@ def get_form_data(request, formclass: forms.Form):
     incident_ids = []
     cleaned_form = None
     if formdata:
-        incident_ids = request.POST.getlist("selected_incidents", [])
+        incident_ids = request.POST.getlist("incident_ids", [])
         form = formclass(formdata)
         if form.is_valid():
             cleaned_form = form.cleaned_data

@@ -3,8 +3,8 @@
 {% block form_control %}
   hx-post="{% url endpoint|default:'htmx:incidents-update' action=action %}"
   {% if action_type == "bulk-update" %}
-    hx-include="[name='selected_incidents']"
+    hx-include="[name='incident_ids']"
   {% else %}
-    hx-vals='{"selected_incidents": [{{ incident.pk }}] }'
+    hx-vals='{"incident_ids": [{{ incident.pk }}] }'
   {% endif %}
 {% endblock %}

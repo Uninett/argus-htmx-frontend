@@ -38,14 +38,18 @@ This assumes that you have a local settings file (we recommend calling it
 ``src/``.
 
 At the top of this local settings file, copy the contents of
-``argus.htmx.settings``. This will automatically use
+``argus.htmx.settings``. This will base the settings-file on
+``argus.site.settings.backend`` and automatically use
 ``argus.site.utils.update_settings`` with
 ``argus_htmx.app_config.APP_SETTINGS`` to set/overwrite some settings and
 mutate others. Note the usage of ``globals()``; due to this, inheriting from
 ``argus.htmx.settings`` will probably not work as expected.
 
-(You might want to switch out ``from argus.site.settings.backend import *`` with
-``from argus.site.settings.dev import *``.)
+While developing you will probably prefer to swap out
+``argus.site.settings.backend`` with ``argus.site.settings.dev``, as the former
+is almost production-ready while the latter is tuned for development and
+depends on the optional dependencies you can install via ``pip install
+argus-server[dev]``.
 
 The ``argus.site.utils.update_settings`` function will add or change the settings
 

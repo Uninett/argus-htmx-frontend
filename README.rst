@@ -65,7 +65,6 @@ file) at minimum add::
     TEMPLATES = [
         {
             "BACKEND": "django.template.backends.django.DjangoTemplates",
-            "DIRS": [str(SITE_DIR / "templates")],
             "APP_DIRS": True,
             "OPTIONS": {
                 "debug": get_bool_env("TEMPLATE_DEBUG", False),

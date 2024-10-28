@@ -73,27 +73,25 @@ def incident_detail(request, pk: int):
 
 def get_form_data(request, formclass: forms.Form):
     formdata = request.POST or None
+    incident_ids = []
     cleaned_form = None
     if formdata:
+        incident_ids = request.POST.getlist("selected_incidents", [])
         form = formclass(formdata)
         if form.is_valid():
             cleaned_form = form.cleaned_data
-    return cleaned_form
+    return cleaned_form, incident_ids
 
 
 @require_POST
-def incidents_update(request: HtmxHttpRequest, action: str, pk: Optional[int] = None):
+def incidents_update(request: HtmxHttpRequest, action: str):
     try:
         formclass, callback_func = INCIDENT_UPDATE_ACTIONS[action]
     except KeyError:
         LOG.error("Unrecognized action name %s when updating incidents.", action)
         return HttpResponseBadRequest("Invalid update action")
-    formdata = get_form_data(request, formclass)
+    formdata, incident_ids = get_form_data(request, formclass)
     if formdata:
-        # If no list of selected incident pks is provided, assume singular incident update
-        incident_ids = request.POST.getlist("selected_incidents")
-        if not incident_ids:
-            incident_ids = [get_object_or_404(Incident, id=pk).pk]
         bulk_change_incidents(request.user, incident_ids, formdata, callback_func)
     return HttpResponseClientRefresh()
 

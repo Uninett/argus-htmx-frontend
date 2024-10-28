@@ -149,6 +149,18 @@ In the file ``extra.json``, (which can be syntax checked with for instance
       }
     ]
 
+Optional authentication backend settings
+----------------------------------------
+
+If using ``django.contrib.auth.backends.RemoteUserBackend`` (which depends on
+the middleware ``django.contrib.auth.middleware.RemoteUserMiddleware``) there's
+an optional setting ``ARGUS_REMOTE_USER_METHOD_NAME`` to choose what to show on
+the button.
+
+If using ``social_core.backends.open_id_connect.OpenIdConnectAuth`` there's an
+optional setting ``ARGUS_OIDC_METHOD_NAME`` to choose what to show on the
+button.
+
 Update
 ======
 

@@ -144,7 +144,7 @@ def incidents_update(request: HtmxHttpRequest):
     try:
         formclass, callback_func = INCIDENT_UPDATE_ACTIONS[form_name]
     except KeyError:
-        LOG.error(f"Unrecognized form name {form_name} when updating incidents.")
+        LOG.error("Unrecognized form name %s when updating incidents.", form_name)
         return HttpResponseBadRequest("Invalid form name")
     formdata, incident_ids = get_form_data(request, formclass)
     if formdata:

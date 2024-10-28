@@ -1,19 +1,14 @@
 from __future__ import annotations
 
 import logging
-from typing import Optional
 from datetime import datetime
 
 from django import forms
 from django.conf import settings
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-from django.contrib import messages
-from django.core.exceptions import PermissionDenied
-from django.shortcuts import redirect, render, get_object_or_404
-from django.urls import reverse
+from django.shortcuts import render, get_object_or_404
 
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django_htmx.middleware import HtmxDetails

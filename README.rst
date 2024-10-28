@@ -37,7 +37,13 @@ This assumes that you have a local settings file (we recommend calling it
 "localsettings.py" since that is hidden by .gitignore) as a sibling of
 ``src/``.
 
-At the top of this local settings file, copy the contents of `argus.htmx.settings`.
+At the top of this local settings file, copy the contents of
+``argus.htmx.settings``. This will automatically use
+``argus.site.utils.update_settings`` with
+``argus_htmx.app_config.APP_SETTINGS`` to set/overwrite some settings and
+mutate others. Note the usage of ``globals()``; due to this, inheriting from
+``argus.htmx.settings`` will probably not work as expected.
+
 (You might want to switch out ``from argus.site.settings.backend import *`` with
 ``from argus.site.settings.dev import *``.)
 
@@ -53,8 +59,10 @@ The ``argus.site.utils.update_settings`` function will add or change the setting
 * ROOT_URLCONF
 * TEMPLATES
 
-See ``argus_htmx.appconfig`` for what is being set. The management command
-``printsettings`` will print out the complete settings used.
+See ``argus_htmx.appconfig._app_settings`` for what is being set. The
+management command ``printsettings`` (which depends on the app
+``django-extensions``, a ``dev``-dependency) will print out the complete
+settings used.
 
 Customizing
 -----------

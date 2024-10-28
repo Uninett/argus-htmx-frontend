@@ -38,7 +38,7 @@ def get_htmx_authentication_backend_name_and_type():
             display_name = OIDC_METHOD_NAME
         psa_backend_data = {
             "url": reverse("social:begin", kwargs={"backend": backend.name}),
-            "display_name": backend.name,
+            "display_name": display_name,
         }
         data.setdefault("external", []).append(psa_backend_data)
 
@@ -48,7 +48,6 @@ def get_htmx_authentication_backend_name_and_type():
 class LoginView(DjangoLoginView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        urlname = "htmx:login"
         backends = get_htmx_authentication_backend_name_and_type()
         context["backends"] = backends
         return context

@@ -81,7 +81,7 @@ With extra-apps machinery
 You make a JSON-file which is read into your settings via one of two
 environment variables.
 
-In order to add apps and settings that *extends* ``argus-server`` and this
+In order to add apps and settings that *extend* ``argus-server`` and this
 ``app`` you use the environment variable ``ARGUS_EXTRA_APPS``::
 
     export ARGUS_EXTRA_APPS=`cat extra.json`
@@ -94,7 +94,7 @@ If you want to *override* existing apps the environment variable to use is
 Have a look at the contents of ``argus_htmx.appconfig._app_settings`` for an
 example of what you can set this way.
 
-You can merge your urlpatterns with the apps's urlpatterns via the
+You can merge your urlpatterns with the apps' urlpatterns via the
 ``argus.site.utils.get_urlpatterns`` function, see ``argus.htmx.urls`` for an
 example.
 

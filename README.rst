@@ -160,6 +160,8 @@ If using ``social_core.backends.open_id_connect.OpenIdConnectAuth`` there's an
 optional setting ``ARGUS_OIDC_METHOD_NAME`` to choose what to show on the
 button.
 
+Both acn be set via environment variables.
+
 Update
 ======
 

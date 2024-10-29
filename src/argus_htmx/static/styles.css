@@ -3564,14 +3564,14 @@ input.tab:checked + .tab-content,
 }
 
 /*
-    * Example usage:
-    * <div class="loading-box">
-    *   <!-- Any content tag here -->
-    *   <div class="htmx-indicator">
-    *     <!-- Any optional feedback widget here -->
-    *   </div>
-    * </div>
-    */
+   * Example usage:
+   * <div class="loading-box">
+   *   <!-- Any content tag here -->
+   *   <div class="htmx-indicator">
+   *     <!-- Any optional feedback widget here -->
+   *   </div>
+   * </div>
+   */
 
 .loading-box {
   display: grid;
@@ -3978,14 +3978,14 @@ input.tab:checked + .tab-content,
   color: var(--fallback-nc,oklch(var(--nc)/0.8));
 }
 
-.text-primary {
-  --tw-text-opacity: 1;
-  color: var(--fallback-p,oklch(var(--p)/var(--tw-text-opacity)));
-}
-
 .text-warning {
   --tw-text-opacity: 1;
   color: var(--fallback-wa,oklch(var(--wa)/var(--tw-text-opacity)));
+}
+
+.text-primary {
+  --tw-text-opacity: 1;
+  color: var(--fallback-p,oklch(var(--p)/var(--tw-text-opacity)));
 }
 
 .antialiased {

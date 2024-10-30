@@ -1,16 +1,9 @@
-{% load widget_tweaks %}
+{% extends 'htmx/forms/dropdown_select_multiple.html' %}
+{% block field_control %}
+  {{ block.super }}
+  hx-get="{% url 'htmx:incidents-filter' %}"
+{% endblock field_control %}
 
-<details class="dropdown input input-accent input-bordered input-sm">
-  <summary>
-    {% for option in field.field.choices %}
-      {% if option.0|stringformat:"i" in field.value %}
-        <span class="badge badge-info">{{ option.1 }}</span>
-      {% endif %}
-    {% empty %}
-      select sources...
-    {% endfor %}
-  </summary>
-  <div class="dropdown-content bg-base-100 rounded-box z-[1] p-2 shadow w-52">
-    {{ field }}
-  </div>
-</details>
+{% block show_selected %}
+  <span class="badge badge-primary">{{ option.label }}</span>
+{% endblock show_selected %}

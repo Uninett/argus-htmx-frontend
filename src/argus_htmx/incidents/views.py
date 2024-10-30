@@ -101,7 +101,7 @@ def _get_page_size(params):
 
 
 @require_GET
-def get_filter_form(request: HtmxHttpRequest):
+def filter_form(request: HtmxHttpRequest):
     incident_list_filter = get_filter_function()
     filter_form, _ = incident_list_filter(request, None)
     context = {"filter_form": filter_form}

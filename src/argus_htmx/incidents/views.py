@@ -15,6 +15,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_GET, require_POST
 from django.core.paginator import Paginator
 from django.http import HttpRequest, HttpResponse
+from django_htmx.http import HttpResponseClientRefresh
 from django_htmx.middleware import HtmxDetails
 
 from argus.incident.models import Incident
@@ -169,6 +170,14 @@ def _get_page_size(params):
     except ValueError:
         pass
     return DEFAULT_PAGE_SIZE
+
+
+@require_GET
+def get_filter_form(request: HtmxHttpRequest):
+    incident_list_filter = get_filter_function()
+    filter_form, _ = incident_list_filter(request, None)
+    context = {"filter_form": filter_form}
+    return render(request, "htmx/incidents/_incident_filterbox.html", context=context)
 
 
 def incident_list(request: HtmxHttpRequest) -> HttpResponse:

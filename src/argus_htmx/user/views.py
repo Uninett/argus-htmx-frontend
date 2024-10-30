@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 
-def user_settings(request):
-    """Renders the main settings page for a user"""
-    context = {"page_title": "User settings"}
-    return render(request, "htmx/user/settings.html", context=context)
+def user_preferences(request):
+    """Renders the main preferences page for a user"""
+    context = {"page_title": "User preferences"}
+    return render(request, "htmx/user/preferences.html", context=context)

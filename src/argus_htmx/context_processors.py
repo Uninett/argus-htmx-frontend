@@ -39,6 +39,11 @@ def theme_via_saved_preference(request):
 
 def datetime_format_via_session(request):
     datetime_format_name = request.session.get("datetime_format_name")
+    if not datetime_format_name:
+        prefs = ArgusHtmxPreferences.objects.get(user=request.user)
+        datetime_format_name = prefs.preferences.get("datetime_format_name", DATETIME_DEFAULT)
+        request.session["datetime_format_name"] = datetime_format_name
+
     if datetime_format_name not in DATETIME_FORMATS:
         datetime_format_name = DATETIME_DEFAULT
     # The named format always wins

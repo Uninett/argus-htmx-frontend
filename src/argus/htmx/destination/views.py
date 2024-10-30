@@ -1,8 +1,13 @@
 from typing import Optional
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse
+
+from rest_framework.exceptions import ValidationError
+
+from argus.notificationprofile.media import api_safely_get_medium_object
+from argus.notificationprofile.media.base import NotificationMedium
 
 from .forms import DestinationFormCreate
 
@@ -21,6 +26,20 @@ def destination_create(request) -> HttpResponse:
         form.save()
         return _render_destination_list(request)
     return _render_destination_list(request, create_form=form)
+
+
+@require_http_methods(["POST"])
+def destination_delete(request, pk: int) -> HttpResponse:
+    destination = get_object_or_404(request.user.destinations.all(), pk=pk)
+
+    try:
+        medium = api_safely_get_medium_object(destination.media.slug)
+        medium.raise_if_not_deletable(destination)
+    except NotificationMedium.NotDeletableError as e:
+        raise ValidationError(str(e))
+    else:
+        destination.delete()
+        return _render_destination_list(request)
 
 
 def _render_destination_list(request, create_form: Optional[DestinationFormCreate] = None) -> HttpResponse:

@@ -1,1 +1,19 @@
 {% extends "htmx/base.html" %}
+{% block main %}
+  <form action="{% url 'htmx:destination-list' %}" method="post">
+    {% csrf_token %}
+    <fieldset class="menu menu-horizontal menu-md border border-primary items-center gap-4">
+      <legend class="menu-title">Create destination</legend>
+      {% for field in create_form %}
+        <label class="flex items-center gap-2">
+          {{ field.label }}
+          <div class="input input-bordered flex items-center gap-2">{{ field }}</div>
+        </label>
+        {% if field.errors %}<p class="text-error">{{ field.errors }}</p>{% endif %}
+      {% empty %}
+        <p>Something went wrong</p>
+      {% endfor %}
+      <input type="submit" value="Create" class="btn btn-primary">
+    </fieldset>
+  </form>
+{% endblock main %}

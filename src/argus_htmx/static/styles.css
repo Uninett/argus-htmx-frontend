@@ -1264,18 +1264,6 @@ html {
     }
   }
 
-  .btn-outline.btn-secondary:hover {
-    --tw-text-opacity: 1;
-    color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
-  }
-
-  @supports (color: color-mix(in oklab, black, black)) {
-    .btn-outline.btn-secondary:hover {
-      background-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
-      border-color: color-mix(in oklab, var(--fallback-s,oklch(var(--s)/1)) 90%, black);
-    }
-  }
-
   .btn-outline.btn-accent:hover {
     --tw-text-opacity: 1;
     color: var(--fallback-ac,oklch(var(--ac)/var(--tw-text-opacity)));
@@ -1987,10 +1975,6 @@ input.tab:checked + .tab-content,
     --btn-color: var(--fallback-p);
   }
 
-  .btn-secondary {
-    --btn-color: var(--fallback-s);
-  }
-
   .btn-accent {
     --btn-color: var(--fallback-a);
   }
@@ -2067,10 +2051,6 @@ input.tab:checked + .tab-content,
     --btn-color: var(--p);
   }
 
-  .btn-secondary {
-    --btn-color: var(--s);
-  }
-
   .btn-accent {
     --btn-color: var(--a);
   }
@@ -2078,12 +2058,6 @@ input.tab:checked + .tab-content,
   .btn-neutral {
     --btn-color: var(--n);
   }
-}
-
-.btn-secondary {
-  --tw-text-opacity: 1;
-  color: var(--fallback-sc,oklch(var(--sc)/var(--tw-text-opacity)));
-  outline-color: var(--fallback-s,oklch(var(--s)/1));
 }
 
 .btn-accent {
@@ -2149,11 +2123,6 @@ input.tab:checked + .tab-content,
 .btn-outline.btn-primary.btn-active {
   --tw-text-opacity: 1;
   color: var(--fallback-pc,oklch(var(--pc)/var(--tw-text-opacity)));
-}
-
-.btn-outline.btn-secondary {
-  --tw-text-opacity: 1;
-  color: var(--fallback-s,oklch(var(--s)/var(--tw-text-opacity)));
 }
 
 .btn-outline.btn-secondary.btn-active {
@@ -3598,23 +3567,41 @@ input.tab:checked + .tab-content,
   --tw-divide-x-reverse: 1;
 }
 
+/*
+   * Example usage:
+   * <div class="loading-box">
+   *   <!-- Any content tag here -->
+   *   <div class="htmx-indicator">
+   *     <!-- Any optional feedback widget here -->
+   *   </div>
+   * </div>
+   */
+
 .loading-box {
-  position: relative;
+  display: grid;
+  place-items: center;
 }
 
-.loading-box .loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Stacks direct children on top of each other */
+
+.loading-box > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
 }
 
-.loading-box .loading-overlay:not(.htmx-request) {
-  display: none;
+/* Adds overlay */
+
+.loading-box:has(> .htmx-indicator.htmx-request) > *:not(.htmx-indicator) {
+  opacity: 0.3;
+}
+
+/* Disables mouse interactions */
+
+.loading-box:has(> .htmx-indicator.htmx-request) * {
+  pointer-events: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .sr-only {
@@ -3913,18 +3900,9 @@ input.tab:checked + .tab-content,
   border-color: var(--fallback-p,oklch(var(--p)/var(--tw-border-opacity)));
 }
 
-.border-secondary {
-  --tw-border-opacity: 1;
-  border-color: var(--fallback-s,oklch(var(--s)/var(--tw-border-opacity)));
-}
-
 .bg-base-100 {
   --tw-bg-opacity: 1;
   background-color: var(--fallback-b1,oklch(var(--b1)/var(--tw-bg-opacity)));
-}
-
-.bg-base-100\/70 {
-  background-color: var(--fallback-b1,oklch(var(--b1)/0.7));
 }
 
 .bg-base-200 {

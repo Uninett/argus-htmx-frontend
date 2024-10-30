@@ -29,9 +29,7 @@
                 <div>
                   {{ field|add_class:"range range-primary range-xs" }}
                   <div class="flex w-full justify-between px-2 text-xs">
-                    {% for tick in "12345" %}
-                      <span>{{ tick }}</span>
-                    {% endfor %}
+                    {% for tick in "12345" %}<span>{{ tick }}</span>{% endfor %}
                   </div>
                 </div>
               {% elif field|field_type == "choicefield" %}
@@ -45,11 +43,8 @@
           {% endif %}
         </li>
       {% empty %}
-        <li>
-          No filter fields configured
-        </li>
+        <li>No filter fields configured</li>
       {% endfor %}
     </ul>
-
   </fieldset>
 </form>

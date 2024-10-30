@@ -1,0 +1,17 @@
+<form action="{% url 'htmx:destination-update' form.instance.id %}"
+      method="post">
+  {% csrf_token %}
+  <fieldset class="menu menu-horizontal menu-md items-center gap-4">
+    {% for hidden_field in form.hidden_fields %}{{ hidden_field }}{% endfor %}
+    {% for field in form.visible_fields %}
+      <label class=" flex items-center gap-2">
+        {{ field.label }}
+        <div class="input input-bordered flex items-center gap-2">{{ field }}</div>
+      </label>
+      {% if field.errors %}<p class="text-error">{{ field.errors }}</p>{% endif %}
+    {% empty %}
+      <p>Something went wrong</p>
+    {% endfor %}
+  </fieldset>
+  <input type="submit" value="Update" class="btn btn-primary">
+</form>

@@ -16,4 +16,14 @@
       <input type="submit" value="Create" class="btn btn-primary">
     </fieldset>
   </form>
+  {% for media, forms in grouped_forms.items %}
+    <details class="collapse bg-base-200 collapse-arrow" open="">
+      <summary class="collapse-title text-xl font-medium">{{ media.name }} ({{ forms|length }})</summary>
+      <div class="collapse-content">
+        {% for form in forms %}
+          {% include "htmx/destination/_forms.html" %}
+        {% endfor %}
+      </div>
+    </details>
+  {% endfor %}
 {% endblock main %}

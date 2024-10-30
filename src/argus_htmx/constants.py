@@ -1,6 +1,6 @@
 from argus_htmx.dateformat.constants import DATETIME_DEFAULT, DATETIME_FORMATS
 from argus_htmx.incidents.constants import DEFAULT_PAGE_SIZE, ALLOWED_PAGE_SIZES
-from argus_htmx.themes.utils import get_theme_names
+from argus_htmx.themes.constants import THEME_CHOICES, THEME_NAMES
 
 
 __all__ = [
@@ -15,7 +15,5 @@ __all__ = [
 ]
 
 
-THEME_NAMES = get_theme_names()
 DATETIME_CHOICES = tuple((format, format) for format in DATETIME_FORMATS)
 PAGE_SIZE_CHOICES = tuple((ps, ps) for ps in ALLOWED_PAGE_SIZES)
-THEME_CHOICES = tuple((theme, theme) for theme in THEME_NAMES)

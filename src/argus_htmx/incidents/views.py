@@ -16,10 +16,11 @@ from django_htmx.http import HttpResponseClientRefresh
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
-from .constants import DEFAULT_PAGE_SIZE, ALLOWED_PAGE_SIZES
+from .constants import DEFAULT_PAGE_SIZE, ALLOWED_PAGE_SIZES, PAGE_SIZE_CHOICES
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
 from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
+from ..models import ArgusHtmxPreferences
 from ..utils import (
     bulk_change_incidents,
     bulk_ack_queryset,
@@ -40,6 +41,20 @@ INCIDENT_UPDATE_ACTIONS = {
     "update-ticket": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
     "add-ticket": (AddTicketUrlForm, bulk_change_ticket_url_queryset),
 }
+
+
+class PageSizeForm(forms.Form):
+    page_size = forms.TypedChoiceField(required=False, choices=PAGE_SIZE_CHOICES, coerce=int)
+
+    def clean_page_size(self):
+        return self.cleaned_data.get("page_size", DEFAULT_PAGE_SIZE) or DEFAULT_PAGE_SIZE
+
+
+def save_page_size(request, page_size):
+    ArgusHtmxPreferences.ensure_for_user(request.user)
+    prefs = ArgusHtmxPreferences.objects.get(user=request.user)
+    prefs.preferences["page_size"] = page_size
+    prefs.save()
 
 
 def prefetch_incident_daughters():
@@ -90,15 +105,6 @@ def incidents_update(request: HtmxHttpRequest, action: str):
     return HttpResponseClientRefresh()
 
 
-def _get_page_size(params):
-    try:
-        if (page_size := int(params.pop("page_size", DEFAULT_PAGE_SIZE))) in ALLOWED_PAGE_SIZES:
-            return page_size
-    except ValueError:
-        pass
-    return DEFAULT_PAGE_SIZE
-
-
 @require_GET
 def filter_form(request: HtmxHttpRequest):
     incident_list_filter = get_filter_function()
@@ -122,9 +128,12 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     filtered_count = qs.count()
 
     # Standard Django pagination
-    page_num = params.pop("page", "1")
-    page_size = _get_page_size(params)
+    page_size_form = PageSizeForm(request.GET)
+    if page_size_form.is_valid():
+        page_size = page_size_form.cleaned_data["page_size"]
+        save_page_size(request, page_size)
     paginator = Paginator(object_list=qs, per_page=page_size)
+    page_num = params.pop("page", "1")
     page = paginator.get_page(page_num)
 
     # The htmx magic - use a different, minimal base template for htmx
@@ -144,7 +153,6 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
         "page": page,
         "last_refreshed": last_refreshed,
         "update_interval": 30,
-        "page_size": page_size,
         "all_page_sizes": ALLOWED_PAGE_SIZES,
     }
 

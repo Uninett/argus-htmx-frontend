@@ -25,7 +25,7 @@
           {% for ps in all_page_sizes %}
             <option class="bg-neutral"
                     value="{{ ps }}"
-                    {% if ps == page_size %}selected{% endif %}>{{ ps }}</option>
+                    {% if ps == preferences.argus_htmx.page_size %}selected{% endif %}>{{ ps }}</option>
           {% endfor %}
         </select>
       </dd>

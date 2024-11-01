@@ -1,5 +1,7 @@
 from argus.auth.models import Preferences, PreferencesManager
 
+from argus_htmx.constants import DATETIME_FORMATS, DATETIME_DEFAULT
+
 
 class ArgusHtmxPreferencesManager(PreferencesManager):
     def get_queryset(self):
@@ -17,3 +19,8 @@ class ArgusHtmxPreferences(Preferences):
         proxy = True
 
     objects = ArgusHtmxPreferencesManager()
+
+    def get_datetime_format_name_context(self):
+        datetime_format_name = self.preferences.get("datetime_format_name", DATETIME_DEFAULT)
+        datetime_format = DATETIME_FORMATS[datetime_format_name]
+        return {"datetime_format": datetime_format}

@@ -1,7 +1,7 @@
 <details>
   <summary>
     Date format
-    <span class="badge badge-primary">{{ datetime_format_name }}</span>
+    <span class="badge badge-primary">{{ preferences.argus_htmx.datetime_format_name }}</span>
   </summary>
   <ul class="max-h-64 overflow-y-scroll">
     <li hx-get="{% url 'htmx:dateformat-names' %}"

@@ -16,11 +16,10 @@ from django_htmx.http import HttpResponseClientRefresh
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
-from .constants import DEFAULT_PAGE_SIZE, ALLOWED_PAGE_SIZES, PAGE_SIZE_CHOICES
+from .constants import ALLOWED_PAGE_SIZES
 from .customization import get_incident_table_columns
 from .utils import get_filter_function
 from .forms import AckForm, DescriptionOptionalForm, EditTicketUrlForm, AddTicketUrlForm
-from ..models import ArgusHtmxPreferences
 from ..utils import (
     bulk_change_incidents,
     bulk_ack_queryset,
@@ -41,20 +40,6 @@ INCIDENT_UPDATE_ACTIONS = {
     "update-ticket": (EditTicketUrlForm, bulk_change_ticket_url_queryset),
     "add-ticket": (AddTicketUrlForm, bulk_change_ticket_url_queryset),
 }
-
-
-class PageSizeForm(forms.Form):
-    page_size = forms.TypedChoiceField(required=False, choices=PAGE_SIZE_CHOICES, coerce=int)
-
-    def clean_page_size(self):
-        return self.cleaned_data.get("page_size", DEFAULT_PAGE_SIZE) or DEFAULT_PAGE_SIZE
-
-
-def save_page_size(request, page_size):
-    ArgusHtmxPreferences.ensure_for_user(request.user)
-    prefs = ArgusHtmxPreferences.objects.get(user=request.user)
-    prefs.preferences["page_size"] = page_size
-    prefs.save()
 
 
 def prefetch_incident_daughters():
@@ -128,10 +113,13 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     filtered_count = qs.count()
 
     # Standard Django pagination
-    page_size_form = PageSizeForm(request.GET)
-    if page_size_form.is_valid():
-        page_size = page_size_form.cleaned_data["page_size"]
-        save_page_size(request, page_size)
+    prefs = request.user.get_preferences("argus_htmx")
+    page_size = prefs.preferences["page_size"]
+    if request.GET.get("page_size", None):
+        page_size_form = prefs.FORMS["page_size"](request.GET)
+        if page_size_form.is_valid():
+            page_size = page_size_form.cleaned_data["page_size"]
+            prefs.save_preference("page_size", page_size)
     paginator = Paginator(object_list=qs, per_page=page_size)
     page_num = params.pop("page", "1")
     page = paginator.get_page(page_num)

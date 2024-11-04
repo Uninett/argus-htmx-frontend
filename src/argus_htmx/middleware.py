@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.contrib.auth.views import redirect_to_login
 from django.http import HttpRequest, HttpResponse
+from django.template import loader
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.encoding import force_str
-from django.template import loader
 
 
 class LoginRequiredMiddleware:

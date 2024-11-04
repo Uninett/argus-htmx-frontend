@@ -1,6 +1,13 @@
 {% extends "htmx/base.html" %}
 {% load widget_tweaks %}
 {% block main %}
+  {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+        <li {% if message.tags %}class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
   <div class="p-6 flex justify-center">
     <div class="card border border-primary p-2 w-full sm:w-96 flex items-center">
       <h2 class="card-title">Log In</h2>

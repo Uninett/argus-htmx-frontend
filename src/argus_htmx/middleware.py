@@ -48,7 +48,8 @@ class LoginRequiredMiddleware:
 
 class HtmxMessageMiddleware(MiddlewareMixin):
     """
-    Add messages to HX-Trigger header if request was via HTMX
+    For htmx requests, adds messages to the #notification-messages div defined in
+    `templates/messages/_notification_messages.html` using htmx's hx-swap-oob feature
     """
 
     TEMPLATE = "messages/_notification_messages_htmx_append.html"

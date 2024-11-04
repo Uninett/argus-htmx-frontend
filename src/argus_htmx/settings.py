@@ -59,8 +59,8 @@ DEFAULT_THEME_OVERRIDE = {}
 TAILWIND_THEME_OVERRIDE = get_json_env("TAILWIND_THEME_OVERRIDE", DEFAULT_THEME_OVERRIDE, quiet=True)
 
 MESSAGE_TAGS = {
-    messages.INFO: "alert-info",
-    messages.SUCCESS: "alert-success",
-    messages.WARNING: "alert-warning",
-    messages.ERROR: "alert-error",
+    messages.INFO: "info alert-info",
+    messages.SUCCESS: "success alert-success",
+    messages.WARNING: "warning alert-warning",
+    messages.ERROR: "error alert-error",
 }

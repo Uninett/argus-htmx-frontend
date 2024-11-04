@@ -16,7 +16,8 @@ module.exports = {
         ...{},
     },
     safelist: [
-        "htmx-request"
+        "htmx-request",
+        { pattern: /alert-(info|success|warning|error)/ }
     ],
     daisyui: {
         themes: [

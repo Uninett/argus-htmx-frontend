@@ -1,4 +1,4 @@
-<div class="alert flex w-full justify-between {% if message.tags %}{{ message.tags }}{% endif %}">
+<div class="alert flex justify-between w-fit border-3 bg-base-100 border-opacity-100 {% if message.tags %}{{ message.tags }}{% endif %}">
   {% block message-content %}
     <div>{{ message }}</div>
   {% endblock message-content %}

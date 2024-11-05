@@ -3,7 +3,6 @@
 # argus_htmx.incidents.customization.BUILTIN_COLUMNS or an instance of
 # argus_htmx.incidents.customization.IncidentTableColumn
 from argus.site.settings import get_json_env
-from django.contrib import messages
 
 INCIDENT_TABLE_COLUMNS = [
     "row_select",
@@ -57,10 +56,3 @@ DEFAULT_THEMES = [
 DAISYUI_THEMES = get_json_env("DAISYUI_THEMES", DEFAULT_THEMES, quiet=True)
 DEFAULT_THEME_OVERRIDE = {}
 TAILWIND_THEME_OVERRIDE = get_json_env("TAILWIND_THEME_OVERRIDE", DEFAULT_THEME_OVERRIDE, quiet=True)
-
-MESSAGE_TAGS = {
-    messages.INFO: "info alert-info",
-    messages.SUCCESS: "success alert-success",
-    messages.WARNING: "warning alert-warning",
-    messages.ERROR: "error alert-error",
-}

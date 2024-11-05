@@ -55,8 +55,7 @@ class HtmxMessageMiddleware(MiddlewareMixin):
     TEMPLATE = "messages/_notification_messages_htmx_append.html"
 
     def process_response(self, request: HttpRequest, response: HttpResponse) -> HttpResponse:
-        # The HX-Request header indicates that the request was made with HTMX
-        if "HX-Request" not in request.headers:
+        if not request.htmx:
             return response
 
         # Ignore redirections because HTMX cannot read the headers

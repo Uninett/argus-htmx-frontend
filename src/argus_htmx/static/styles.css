@@ -4017,6 +4017,14 @@ input.tab:checked + .tab-content,
   border-width: 2px;
 }
 
+.border-2 {
+  border-width: 2px;
+}
+
+.border-3 {
+  border-width: 3px;
+}
+
 .border-b {
   border-bottom-width: 2px;
 }

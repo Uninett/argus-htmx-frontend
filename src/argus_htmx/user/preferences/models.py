@@ -52,7 +52,7 @@ class ArgusHtmxPreferences(Preferences):
 
     objects = ArgusHtmxPreferencesManager()
 
-    def get_datetime_format_name_context(self):
-        datetime_format_name = self.preferences.get("datetime_format_name", DATETIME_DEFAULT)
+    def update_context(self, context):
+        datetime_format_name = context.get("datetime_format_name", DATETIME_DEFAULT)
         datetime_format = DATETIME_FORMATS[datetime_format_name]
         return {"datetime_format": datetime_format}

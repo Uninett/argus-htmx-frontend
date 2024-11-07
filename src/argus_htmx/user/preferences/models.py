@@ -15,8 +15,8 @@ from argus_htmx.constants import (
 class DateTimeFormatForm(forms.Form):
     datetime_format_name = forms.ChoiceField(required=False, choices=DATETIME_CHOICES)
 
-    def clean_datetime_format(self):
-        return self.cleaned_data.get("datetime_format", DATETIME_DEFAULT) or DATETIME_DEFAULT
+    def clean_datetime_format_name(self):
+        return self.cleaned_data.get("datetime_format_name", DATETIME_DEFAULT) or DATETIME_DEFAULT
 
 
 class PageSizeForm(forms.Form):

@@ -46,6 +46,10 @@ class ArgusHtmxPreferences(Preferences):
         "page_size": PageSizeForm,
         "theme": ThemeForm,
     }
+    FIELD_DEFAULTS = {
+        "datetime_format_name": DATETIME_DEFAULT,
+        "page_size": DEFAULT_PAGE_SIZE,
+    }
 
     class Meta:
         proxy = True

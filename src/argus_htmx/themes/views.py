@@ -27,7 +27,7 @@ class ThemeListView(ListView):
         return self.themes
 
     def post(self, request, *args, **kwargs):
-        prefs = request.user.get_preferences("argus_htmx")
+        prefs = request.user.get_namespaced_preferences("argus_htmx")
         form = prefs.FORMS["theme"](request.POST)
         if form.is_valid():
             theme = form.cleaned_data["theme"]
@@ -46,7 +46,7 @@ def theme_names(request: HtmxHttpRequest) -> HttpResponse:
 
 @require_POST
 def change_theme(request: HtmxHttpRequest) -> HttpResponse:
-    prefs = request.user.get_preferences("argus_htmx")
+    prefs = request.user.get_namespaced_preferences("argus_htmx")
     theme = prefs.preferences.get("theme", None)
     LOG.debug("Changing theme, current theme: %s", theme)
     if request.POST.get("theme", None):

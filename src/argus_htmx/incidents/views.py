@@ -113,8 +113,8 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     filtered_count = qs.count()
 
     # Standard Django pagination
-    prefs = request.user.get_preferences("argus_htmx")
-    page_size = prefs.preferences["page_size"]
+    prefs = request.user.get_namespaced_preferences("argus_htmx")
+    page_size = prefs.get_preference("page_size")
     if request.GET.get("page_size", None):
         page_size_form = prefs.FORMS["page_size"](request.GET)
         if page_size_form.is_valid():

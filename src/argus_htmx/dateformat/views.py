@@ -21,7 +21,7 @@ def dateformat_names(request: HtmxHttpRequest) -> HttpResponse:
 
 @require_POST
 def change_dateformat(request: HtmxHttpRequest) -> HttpResponse:
-    prefs = request.user.get_preferences("argus_htmx")
+    prefs = request.user.get_namespaced_preferences("argus_htmx")
     form = prefs.FORMS["datetime_format_name"](request.POST)
     if form.is_valid():
         datetime_format_name = form.cleaned_data["datetime_format_name"]

@@ -13,6 +13,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest
 from django_htmx.middleware import HtmxDetails
 from django_htmx.http import HttpResponseClientRefresh
 
+from argus.auth.utils import save_preference
 from argus.incident.models import Incident
 from argus.util.datetime_utils import make_aware
 
@@ -113,13 +114,8 @@ def incident_list(request: HtmxHttpRequest) -> HttpResponse:
     filtered_count = qs.count()
 
     # Standard Django pagination
-    prefs = request.user.get_namespaced_preferences("argus_htmx")
-    page_size = prefs.get_preference("page_size")
-    if request.GET.get("page_size", None):
-        page_size_form = prefs.FORMS["page_size"](request.GET)
-        if page_size_form.is_valid():
-            page_size = page_size_form.cleaned_data["page_size"]
-            prefs.save_preference("page_size", page_size)
+
+    page_size = save_preference(request, request.GET, "argus_htmx", "page_size")
     paginator = Paginator(object_list=qs, per_page=page_size)
     page_num = params.pop("page", "1")
     page = paginator.get_page(page_num)

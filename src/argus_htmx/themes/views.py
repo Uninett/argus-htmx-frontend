@@ -1,12 +1,13 @@
 import logging
 
-from django.contrib import messages
 from django.shortcuts import render
 from django.views.generic import ListView
 
 from django.views.decorators.http import require_GET, require_POST
 from django.http import HttpResponse, HttpResponseRedirect
 from django_htmx.http import HttpResponseClientRefresh
+
+from argus.auth.utils import get_preference, save_preference
 
 from argus_htmx.constants import THEME_NAMES
 from argus_htmx.incidents.views import HtmxHttpRequest
@@ -27,14 +28,7 @@ class ThemeListView(ListView):
         return self.themes
 
     def post(self, request, *args, **kwargs):
-        prefs = request.user.get_namespaced_preferences("argus_htmx")
-        form = prefs.FORMS["theme"](request.POST)
-        if form.is_valid():
-            theme = form.cleaned_data["theme"]
-            prefs.save_preference("theme", theme)
-            messages.success(request, f'Switched theme to "{theme}"')
-        else:
-            messages.warning(request, "Did not switch theme, theme not installed")
+        save_preference(request, request.POST, "argus_htmx", "theme")
         return HttpResponseRedirect("")
 
 
@@ -46,18 +40,8 @@ def theme_names(request: HtmxHttpRequest) -> HttpResponse:
 
 @require_POST
 def change_theme(request: HtmxHttpRequest) -> HttpResponse:
-    prefs = request.user.get_namespaced_preferences("argus_htmx")
-    theme = prefs.preferences.get("theme", None)
-    LOG.debug("Changing theme, current theme: %s", theme)
-    if request.POST.get("theme", None):
-        form = prefs.FORMS["theme"](request.POST)
-        LOG.debug("Changing theme, POST: %s, form: %s", request.POST, form)
-        if form.is_valid():
-            theme = form.cleaned_data["theme"]
-            prefs.save_preference("theme", theme)
-            messages.success(request, f'Switched theme to "{theme}"')
-            LOG.info("Changing theme: changed to %s", theme)
-        else:
-            LOG.warn("Changing theme: failed to change theme")
+    old_theme = get_preference(request, "argus_htmx", "theme")
+    theme = save_preference(request, request.POST, "argus_htmx", "theme")
+    if old_theme != theme:
         return HttpResponse(theme)
     return HttpResponseClientRefresh()

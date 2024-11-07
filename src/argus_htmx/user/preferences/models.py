@@ -1,6 +1,6 @@
 from django import forms
 
-from argus.auth.models import Preferences, PreferencesManager
+from argus.auth.models import Preferences, preferences_manager_factory
 
 from argus_htmx.constants import (
     DATETIME_FORMATS,
@@ -30,15 +30,6 @@ class ThemeForm(forms.Form):
     theme = forms.ChoiceField(choices=THEME_CHOICES)
 
 
-class ArgusHtmxPreferencesManager(PreferencesManager):
-    def get_queryset(self):
-        return super().get_queryset().filter(namespace=ArgusHtmxPreferences._namespace)
-
-    def create(self, **kwargs):
-        kwargs["namespace"] = ArgusHtmxPreferences._namespace
-        return super().create(**kwargs)
-
-
 class ArgusHtmxPreferences(Preferences):
     _namespace = "argus_htmx"
     FORMS = {
@@ -54,7 +45,7 @@ class ArgusHtmxPreferences(Preferences):
     class Meta:
         proxy = True
 
-    objects = ArgusHtmxPreferencesManager()
+    objects = preferences_manager_factory(_namespace)()
 
     def update_context(self, context):
         datetime_format_name = context.get("datetime_format_name", DATETIME_DEFAULT)

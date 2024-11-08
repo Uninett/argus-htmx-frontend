@@ -40,8 +40,9 @@ def theme_names(request: HtmxHttpRequest) -> HttpResponse:
 
 @require_POST
 def change_theme(request: HtmxHttpRequest) -> HttpResponse:
-    old_theme = get_preference(request, "argus_htmx", "theme")
-    theme = save_preference(request, request.POST, "argus_htmx", "theme")
-    if old_theme != theme:
+    theme = get_preference(request, "argus_htmx", "theme")
+    success = save_preference(request, request.POST, "argus_htmx", "theme")
+    if success:
+        theme = get_preference(request, "argus_htmx", "theme")
         return HttpResponse(theme)
     return HttpResponseClientRefresh()

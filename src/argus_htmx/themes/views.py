@@ -35,7 +35,7 @@ class ThemeListView(ListView):
 @require_GET
 def theme_names(request: HtmxHttpRequest) -> HttpResponse:
     themes = THEME_NAMES
-    return render(request, "htmx/themes/theme_list.html", {"theme_list": themes})
+    return render(request, "htmx/themes/_theme_list.html", {"theme_list": themes})
 
 
 @require_POST

@@ -37,7 +37,7 @@ class ArgusHtmxPreferences(Preferences):
         "page_size": PageSizeForm,
         "theme": ThemeForm,
     }
-    FIELD_DEFAULTS = {
+    _FIELD_DEFAULTS = {
         "datetime_format_name": DATETIME_DEFAULT,
         "page_size": DEFAULT_PAGE_SIZE,
     }

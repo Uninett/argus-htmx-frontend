@@ -1,7 +1,7 @@
 {% load widget_tweaks %}
 <form id="incident-filter-box"
       hx-get="{% url 'htmx:incident-list' %}"
-      hx-include="#table-refresh-info, .column-filter"
+      hx-include="#table-refresh-info, #incident-filter-box, .column-filter"
       hx-trigger="keydown[keyCode==13], change delay:100ms"
       hx-target="#table"
       hx-swap="outerHTML"

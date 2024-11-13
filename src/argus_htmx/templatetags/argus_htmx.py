@@ -1,6 +1,7 @@
 from django import template
 from django.contrib.messages.storage.base import Message
 
+
 register = template.Library()
 
 

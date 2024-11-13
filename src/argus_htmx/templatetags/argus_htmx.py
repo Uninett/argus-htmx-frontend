@@ -1,6 +1,6 @@
 from django import template
 from django.contrib.messages.storage.base import Message
-
+from django.conf import settings
 
 register = template.Library()
 
@@ -37,4 +37,8 @@ def pp_level(level: int) -> str:
 
 @register.filter
 def autoclose_time(message: Message):
-    return 10 if "success" in message.tags else -1
+    candidates = getattr(settings, "NOTIFICATION_TOAST_AUTOCLOSE_SECONDS", {})
+    tags = set(message.tags.split()) & set(candidates.keys())
+    if not tags:
+        return -1
+    return min(candidates[tag] for tag in tags)

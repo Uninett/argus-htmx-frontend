@@ -332,8 +332,9 @@ is::
       "autoclose": 10,
   }
 
-This means that any message has either the `tag`_ ``"success"`` or ``"autoclose"`` will
-automatically close after 10 seconds
+This means that any message that has either the `tag`_ ``"success"`` or ``"autoclose"`` will
+automatically close after 10 seconds. You can update this dictionary with existing tags such as
+"warning" or "error", or make up your own.
 
 .. _Django Messages: https://docs.djangoproject.com/en/5.1/ref/contrib/messages
 .. _tag: https://docs.djangoproject.com/en/5.1/ref/contrib/messages/#message-tags

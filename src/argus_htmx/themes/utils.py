@@ -8,7 +8,10 @@ from django.core.exceptions import ImproperlyConfigured
 from argus_htmx import settings as default_htmx_settings
 
 
-__all__ = ["get_theme_names"]
+__all__ = [
+    "get_theme_names",
+    "get_theme_default",
+]
 
 
 def get_themes_from_setting():
@@ -22,12 +25,16 @@ def get_themes_from_setting():
     return theme_names
 
 
+def get_stylesheet_path():
+    return getattr(settings, "STYLESHEET_PATH", default_htmx_settings.STYLESHEET_PATH)
+
+
 def get_themes_from_css():
     THEME_NAME_RE = "(?P<theme>\w+)"
     DATA_THEME_RE = f"\[data-theme={THEME_NAME_RE}\]"
 
     static_url = Path(settings.STATIC_URL).relative_to("/")
-    stylesheet_path = static_url / default_htmx_settings.STYLESHEET_PATH
+    stylesheet_path = static_url / get_stylesheet_path()
     styles_css = files("argus_htmx").joinpath(stylesheet_path).read_text()
 
     return findall(DATA_THEME_RE, styles_css)

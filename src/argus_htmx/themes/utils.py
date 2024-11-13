@@ -5,7 +5,7 @@ from re import findall
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 
-from argus_htmx import settings as default_htmx_settings
+from argus_htmx import settings as fallbacks
 
 
 __all__ = [
@@ -15,7 +15,7 @@ __all__ = [
 
 
 def get_themes_from_setting():
-    themes_setting = getattr(settings, "DAISYUI_THEMES", default_htmx_settings.DAISYUI_THEMES)
+    themes_setting = getattr(settings, "DAISYUI_THEMES", fallbacks.DAISYUI_THEMES)
     theme_names = []
     for theme in themes_setting:
         if isinstance(theme, str):
@@ -26,7 +26,7 @@ def get_themes_from_setting():
 
 
 def get_stylesheet_path():
-    return getattr(settings, "STYLESHEET_PATH", default_htmx_settings.STYLESHEET_PATH)
+    return getattr(settings, "STYLESHEET_PATH", fallbacks.STYLESHEET_PATH)
 
 
 def get_themes_from_css():
@@ -51,4 +51,4 @@ def get_theme_names():
 
 
 def get_theme_default():
-    return getattr(settings, "THEME_DEFAULT", default_htmx_settings.THEME_DEFAULT)
+    return getattr(settings, "THEME_DEFAULT", fallbacks.THEME_DEFAULT)

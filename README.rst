@@ -316,3 +316,24 @@ By default, incidents are shown with a page size of ``10`` (ie. 10 rows at a tim
 select a different page size from ``[10, 20, 50, 100]``. It possible to override these settings by
 setting the ``ARGUS_INCIDENTS_DEFAULT_PAGE_SIZE`` and ``ARGUS_INCIDENTS_PAGE_SIZES`` setting
 respectively.
+
+
+Toast messages
+--------------
+
+``argus_htmx`` uses the `Django Messages`_ framework to dynmically display notifications toasts
+messages to the user. Some of these messages stay on screen until the user refreshes, while others
+automatically close (disappear) after a certain time. This can be customized by modifying or
+overriding the ``NOTIFICATION_TOAST_AUTOCLOSE_SECONDS`` setting. The default value for this setting
+is::
+
+  NOTIFICATION_TOAST_AUTOCLOSE_SECONDS = {
+      "success": 10,
+      "autoclose": 10,
+  }
+
+This means that any message has either the `tag`_ ``"success"`` or ``"autoclose"`` will
+automatically close after 10 seconds
+
+.. _Django Messages: https://docs.djangoproject.com/en/5.1/ref/contrib/messages
+.. _tag: https://docs.djangoproject.com/en/5.1/ref/contrib/messages/#message-tags

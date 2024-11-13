@@ -1,5 +1,5 @@
 from django import template
-
+from django.contrib.messages.storage.base import Message
 
 register = template.Library()
 
@@ -32,3 +32,8 @@ def pp_level(level: int) -> str:
     if level not in mapping:
         return mapping["5"]
     return mapping[level]
+
+
+@register.filter
+def autoclose_time(message: Message):
+    return 10 if "success" in message.tags else -1

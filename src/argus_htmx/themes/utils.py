@@ -1,5 +1,6 @@
 from importlib.resources import files
 from pathlib import Path
+from re import findall
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
@@ -22,18 +23,14 @@ def get_themes_from_setting():
 
 
 def get_themes_from_css():
+    THEME_NAME_RE = "(?P<theme>\w+)"
+    DATA_THEME_RE = f"\[data-theme={THEME_NAME_RE}\]"
+
     static_url = Path(settings.STATIC_URL).relative_to("/")
     stylesheet_path = static_url / default_htmx_settings.STYLESHEET_PATH
     styles_css = files("argus_htmx").joinpath(stylesheet_path).read_text()
-    styles_css_lines = styles_css.split("{")
-    theme_names = []
-    for line in styles_css_lines:
-        if "data-theme=" not in line:
-            continue
-        _, after = line.split("=", 1)
-        theme_name, _ = after.split("]", 1)
-        theme_names.append(theme_name.strip())
-    return theme_names
+
+    return findall(DATA_THEME_RE, styles_css)
 
 
 def get_theme_names():

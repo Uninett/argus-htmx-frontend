@@ -9,7 +9,7 @@ def check_for_valid_themes_list(app_configs, **kwargs):
     errors = []
     themes = []
     try:
-        themes = get_theme_names()
+        themes = get_theme_names(quiet=False)
     except ImproperlyConfigured as e:
         errors.append(
             Error(

@@ -1,9 +1,10 @@
-from importlib.resources import files
+import logging
 from pathlib import Path
 from re import findall
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.contrib.staticfiles.finders import find
 
 from argus_htmx import settings as fallbacks
 
@@ -12,6 +13,9 @@ __all__ = [
     "get_theme_names",
     "get_theme_default",
 ]
+
+
+LOG = logging.getLogger(__name__)
 
 
 def get_themes_from_setting():
@@ -30,23 +34,28 @@ def get_stylesheet_path():
 
 
 def get_themes_from_css():
-    THEME_NAME_RE = "(?P<theme>\w+)"
+    THEME_NAME_RE = "(?P<theme>[-_]\w+)"
     DATA_THEME_RE = f"\[data-theme={THEME_NAME_RE}\]"
 
-    static_url = Path(settings.STATIC_URL).relative_to("/")
-    stylesheet_path = static_url / get_stylesheet_path()
-    styles_css = files("argus_htmx").joinpath(stylesheet_path).read_text()
+    absolute_stylesheet_path = Path(find(get_stylesheet_path()))
+    styles_css = absolute_stylesheet_path.read_text()
 
     return findall(DATA_THEME_RE, styles_css)
 
 
-def get_theme_names():
+def get_theme_names(quiet=True):
+    ERROR_MSG = "Themes in settings are out of sync with themes installed"
+
     themes_from_setting = set(get_themes_from_setting())
     themes_from_css = set(get_themes_from_css())
-    installed_themes = themes_from_setting | themes_from_css
+    installed_themes = themes_from_setting & themes_from_css
+
     all_themes = themes_from_setting & themes_from_css
     if all_themes != installed_themes:
-        raise ImproperlyConfigured("Themes in settings is out of sync with themes installed")
+        LOG.warning(ERROR_MSG)
+        if not quiet:
+            raise ImproperlyConfigured(ERROR_MSG)
+
     return installed_themes
 
 

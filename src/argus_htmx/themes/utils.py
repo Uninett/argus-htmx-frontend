@@ -34,7 +34,7 @@ def get_stylesheet_path():
 
 
 def get_themes_from_css():
-    THEME_NAME_RE = "(?P<theme>[-_]\w+)"
+    THEME_NAME_RE = "(?P<theme>[-_\w]+)"
     DATA_THEME_RE = f"\[data-theme={THEME_NAME_RE}\]"
 
     absolute_stylesheet_path = Path(find(get_stylesheet_path()))
@@ -50,7 +50,7 @@ def get_theme_names(quiet=True):
     themes_from_css = set(get_themes_from_css())
     installed_themes = themes_from_setting & themes_from_css
 
-    all_themes = themes_from_setting & themes_from_css
+    all_themes = themes_from_setting | themes_from_css
     if all_themes != installed_themes:
         LOG.warning(ERROR_MSG)
         if not quiet:

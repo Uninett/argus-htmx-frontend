@@ -10,6 +10,7 @@ from argus_htmx import settings as fallbacks
 
 
 __all__ = [
+    "get_raw_themes_setting",
     "get_theme_names",
     "get_theme_default",
 ]
@@ -18,8 +19,12 @@ __all__ = [
 LOG = logging.getLogger(__name__)
 
 
+def get_raw_themes_setting():
+    return getattr(settings, "DAISYUI_THEMES", fallbacks.DAISYUI_THEMES)
+
+
 def get_themes_from_setting():
-    themes_setting = getattr(settings, "DAISYUI_THEMES", fallbacks.DAISYUI_THEMES)
+    themes_setting = get_raw_themes_setting()
     theme_names = []
     for theme in themes_setting:
         if isinstance(theme, str):

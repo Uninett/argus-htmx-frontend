@@ -78,7 +78,8 @@ urls.py and set ROOT_URLCONF appropriately.
 If you have some other apps you want installed and configured, you could either
 add the necessary settings to your ``localsettings.py`` or use the extra-apps
 machinery. The later is especially useful during the development phase when you
-haven't settled on which apps to use yet.
+haven't settled on which apps to use yet, or if you want to test some makeshift
+apps in a way that is easy to setup and easy to discard.
 
 With extra-apps machinery
 ~~~~~~~~~~~~~~~~~~~~~~~~~

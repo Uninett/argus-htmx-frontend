@@ -49,7 +49,8 @@ While developing you will probably prefer to swap out
 ``argus.site.settings.backend`` with ``argus.site.settings.dev``, as the former
 is almost production-ready while the latter is tuned for development and
 depends on the optional dependencies you can install via ``pip install
-argus-server[dev]``.
+argus-server[dev]``. This is especially relevant if you want do not
+explicitly set the variables ``SECRET_KEY`` and ``STATIC_ROOT``.
 
 The ``argus.site.utils.update_settings`` function will add or change the settings
 

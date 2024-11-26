@@ -17,6 +17,9 @@ class DateTimeFormat:
 
 
 DATETIME_FALLBACK = "LOCALE"
+
+# Datetime format specification can be found here:
+# https://docs.djangoproject.com/en/5.1/ref/templates/builtins/#date
 DATETIME_FORMATS = {
     "LOCALE": DateTimeFormat(datetime="DATETIME_FORMAT", date="DATE_FORMAT", time="TIME_FORMAT"),  # default
     "ISO": DateTimeFormat(datetime="Y-m-d H:i:s", date="Y-m-d", time="H:i:s"),

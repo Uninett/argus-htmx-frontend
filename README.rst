@@ -12,6 +12,14 @@ See `argus-server`_ for more about argus.
 Imports `django-htmx`_. See the `documentation for django-htmx`_
 for details.
 
+.. attention::
+
+   This repo is in the process of being merged into the repo at `argus-server`_.
+
+   New issues and PR's should be opened agains that repo, not this one.
+   Existing PR's will be merged here, then moved. Existing open issues will
+   also be moved (eventually).
+
 How to play
 ===========
 

@@ -12,16 +12,95 @@ See `argus-server`_ for more about argus.
 Imports `django-htmx`_. See the `documentation for django-htmx`_
 for details.
 
-.. attention::
+Moving to argus-server repo
+---------------------------
+This repo is in the process of being merged into the repo at `argus-server`_.
 
-   This repo is in the process of being merged into the repo at `argus-server`_.
+New issues and PR's should be opened agains that repo, not this one.
+Existing PR's will be merged here, then moved. Existing open issues will
+also be moved (eventually).
 
-   New issues and PR's should be opened agains that repo, not this one.
-   Existing PR's will be merged here, then moved. Existing open issues will
-   also be moved (eventually).
+Moving issues
+~~~~~~~~~~~~~
+
+Github seems to be able to handle this just fine.
+
+Moving PRs
+~~~~~~~~~~
+
+Procedure for existing PR's:
+
+The code tree has been changed from ``src/argus_htmx`` to ``src/argus/htmx``
+so branches should be updated accordingly. Try ``git mv`` or ``git rebase``.
+
+If you want to move the PR to the argus-server repo you first need to move the
+branch, then start a new PR with the same name at argus-server, then link back
+to any discussion in this repo from the new PR. Now you can close the PR in
+this repo.
+
+First, setup the remote.
+
+1. Add `argus-server`_ as a remote::
+
+        git remote add argus git@github.com:Uninett/Argus.git
+
+2. Fetch the branches on argus::
+
+        git fetch argus
+
+3. Checkout master::
+
+        git switch master
+
+Then, prep the branch.
+
+1. First make sure the files are in the right tree, ``src/argus/htmx``.
+   ``src/argus`` has no ``__init__.py``, this is to avoid conflicts. Do not add
+   one. Try rebasing/cherry-picking on ``main``. It is enough to just move the
+   files. Correcting import paths and file paths can be done *after* the move,
+   in the new repo, with a new commit.
+
+2. Make a temporary branch name for the branch you want to move, at its head::
+
+        git switch mybranch
+        git switch -c fvgyhj
+
+3. If it's only a single commit you can cherrypick it. Move the real name to
+   the master then cherry-pick::
+
+        git branch -f mybranch master
+        git switch mybranch
+        git cherry-pick fvgyhj
+
+   If not, a rebase can do it for you. If you didn't do step 1 correctly there
+   will be a lot of conflicts!
+
+   How to rebase (assumes ``mybranch`` is rebased om ``main``)::
+
+        git rebase --onto master main mybranch
+
+   You can now remove the temporary branch::
+
+        git branch -d fvgyhj
+
+4. Push the branch to the new remote::
+
+        git switch mybranch
+        git push argus
+
+5. Make the PR in argus-server and pull the branch in your local copy of that.
+
+6. Do any internal changes to the actual code in the new repo if you didn't do
+   that as a part of step 1.
+
+Done!
+
 
 How to play
 ===========
+
+See the docs of argus-server. The rest of this README is deprecated but kept
+here until everything has been moved.
 
 Install
 -------

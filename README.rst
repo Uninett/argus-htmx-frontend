@@ -52,20 +52,26 @@ First, setup the remote.
 
         git switch master
 
-Then, prep the branch.
+Second, prep the branch.
 
-1. First make sure the files are in the right tree, ``src/argus/htmx``.
-   ``src/argus`` has no ``__init__.py``, this is to avoid conflicts. Do not add
-   one. Try rebasing/cherry-picking on ``main``. It is enough to just move the
-   files. Correcting import paths and file paths can be done *after* the move,
-   in the new repo, with a new commit.
+Make sure the files are in the right tree, ``src/argus/htmx``. ``src/argus``
+*in this repo* has no ``__init__.py``, this is to avoid conflicts. Do not add
+one. Do ``git mv src/argus_htmx src/argus/htmx`` or ``git rebase main
+mybranch`` or use a grahical client to cherrypick one by one onto main. It is
+enough to just move the files. Correcting import paths and file include paths
+can be done *after* the move, in the new repo, with a new commit.
 
-2. Make a temporary branch name for the branch you want to move, at its head::
+This way, you can deal with file renaming conflicts once, and content change
+conflicts once.
+
+Now you're ready for the move.
+
+1. Make a temporary branch name for the branch you want to move, at its head::
 
         git switch mybranch
         git switch -c fvgyhj
 
-3. If it's only a single commit you can cherrypick it. Move the real name to
+2. If it's only a single commit you can cherrypick it. Move the real name to
    the master then cherry-pick::
 
         git branch -f mybranch master
@@ -73,7 +79,7 @@ Then, prep the branch.
         git cherry-pick fvgyhj
 
    If not, a rebase can do it for you. If you didn't do step 1 correctly there
-   will be a lot of conflicts!
+   will be more conflicts than necessary!
 
    How to rebase (assumes ``mybranch`` is rebased om ``main``)::
 
@@ -83,15 +89,16 @@ Then, prep the branch.
 
         git branch -d fvgyhj
 
-4. Push the branch to the new remote::
+3. Push the branch to the new remote::
 
         git switch mybranch
         git push argus
 
-5. Make the PR in argus-server and pull the branch in your local copy of that.
+4. Make the PR in argus-server and pull the branch in your local copy of that
+   repo.
 
-6. Do any internal changes to the actual code in the new repo if you didn't do
-   that as a part of step 1.
+5. Do any internal changes to the actual code in the new repo if you didn't do
+   that as a part of the branch prep.
 
 Done!
 

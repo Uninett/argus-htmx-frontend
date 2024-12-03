@@ -57,7 +57,7 @@ Second, prep the branch.
 Make sure the files are in the right tree, ``src/argus/htmx``. ``src/argus``
 *in this repo* has no ``__init__.py``, this is to avoid conflicts. Do not add
 one. Do ``git mv src/argus_htmx src/argus/htmx`` or ``git rebase main
-mybranch`` or use a grahical client to cherrypick one by one onto main. It is
+mybranch`` or use a graphical client to cherrypick one by one onto main. It is
 enough to just move the files. Correcting import paths and file include paths
 can be done *after* the move, in the new repo, with a new commit.
 

@@ -28,7 +28,7 @@ Github seems to be able to handle this just fine.
 Moving PRs
 ~~~~~~~~~~
 
-Procedure for existing PR's:
+Procedure for existing PRs:
 
 The code tree has been changed from ``src/argus_htmx`` to ``src/argus/htmx``
 so branches should be updated accordingly. Try ``git mv`` or ``git rebase``.

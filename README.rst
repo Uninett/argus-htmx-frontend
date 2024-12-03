@@ -81,7 +81,7 @@ Now you're ready for the move.
    If not, a rebase can do it for you. If you didn't do step 1 correctly there
    will be more conflicts than necessary!
 
-   How to rebase (assumes ``mybranch`` is rebased om ``main``)::
+   How to rebase (assumes ``mybranch`` is rebased on ``main``)::
 
         git rebase --onto master main mybranch
 

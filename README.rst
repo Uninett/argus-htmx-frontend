@@ -16,8 +16,8 @@ Moving to argus-server repo
 ---------------------------
 This repo is in the process of being merged into the repo at `argus-server`_.
 
-New issues and PR's should be opened agains that repo, not this one.
-Existing PR's will be merged here, then moved. Existing open issues will
+New issues and PRs should be opened against that repo, not this one.
+Existing PRs will be merged here, then moved. Existing open issues will
 also be moved (eventually).
 
 Moving issues
